@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clipChildren="false"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    >
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray60"
+        />
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:clipChildren="false"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/iv_live"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/tab_live_selector"
+            android:scaleType="center"/>
+
+        <ImageView
+            android:id="@+id/show"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom"
+            android:clickable="true"
+            android:src="@drawable/tab_room_selector"
+            />
+
+        <ImageView
+            android:id="@+id/iv_mine"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/tab_me_selector"
+            android:scaleType="center"
+            />
+    </LinearLayout>
+</LinearLayout>
