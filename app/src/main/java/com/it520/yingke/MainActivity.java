@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(WindowManager.LayoutParams.FIRST_SUB_WINDOW)
+        getWindow().setBackgroundDrawable(null);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mFragmentManager = getSupportFragmentManager();

@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/dark_gray"
-              android:orientation="vertical">
+              android:orientation="vertical"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -306,11 +307,13 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="70dp"
                     android:background="@color/dark_gray" />
             </LinearLayout>
 
         </LinearLayout>
+        
+
     </ScrollView>
 
 

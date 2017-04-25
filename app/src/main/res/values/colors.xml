@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="gray60">#99BFBFBF</color>
+    <color name="gray30">#eeBFBFBF</color>
     <color name="line">#F2F2F2</color>
     <color name="dark_gray">#F5FBFB</color>
     <color name="top_gray">#25D7C8</color>
@@ -17,6 +18,8 @@
     <color name="yellow">#FFFF00</color>
     <color name="black50">#7d000000</color>
     <color name="black80">#cc000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
 
 
 </resources>
