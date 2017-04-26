@@ -63,7 +63,6 @@ public class LiveFragment extends Fragment {
     }
 
     private void initViewPager() {
-
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (int i = 0; i < mTitles.length; i++) {
             Fragment fragment;

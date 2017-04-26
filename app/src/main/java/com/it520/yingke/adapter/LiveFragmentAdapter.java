@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 public class LiveFragmentAdapter extends FragmentStatePagerAdapter {
 
-
     private ArrayList<Fragment> mFragments;
     private String[] mTitles;
     public LiveFragmentAdapter(FragmentManager fm, ArrayList<Fragment> fragments, String[] titles) {

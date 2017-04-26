@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
@@ -98,11 +99,20 @@ public class AutoHideBottomLayout extends RelativeLayout {
                 float dx = newX - mStartX;
                 float dy = newY - mStartY;
                 //// TODO:根据位移，将底部进行隐藏
+                //先判断移动的方向，如果主要是在X轴上的移动，则不予处理
+                if(Math.abs(dx)> ViewConfiguration.getTouchSlop()&&Math.abs(dx)>Math.abs(dy)){
+                    //早已经超限制了，无需再scroll
+                    Log.e(getClass().getSimpleName() + "xmg", "dispatchTouchEvent: " + "正在X轴方向上移动，进行拦截不做隐藏处理");
+                    mShouldIntercept = true;
+                    return super.dispatchTouchEvent(event);
+                }
                 scrollY = mBottom.getScrollY();
                 if(scrollY>0&&dy<0||scrollY<-mMeasuredHeight&&dy>0){
                     //早已经超限制了，无需再scroll
+                    mShouldIntercept = true;
                     return super.dispatchTouchEvent(event);
                 }
+
                 mBottom.scrollBy(0, (int) dy);
                 //判断边界条件
                 scrollY = mBottom.getScrollY();
