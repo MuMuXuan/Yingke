@@ -5,10 +5,9 @@
        <item>关注</item>
        <item>热门</item>
        <item>附近</item>
+       <item>视频</item>
        <item>才艺</item>
-       <item>才A</item>
-       <item>才B</item>
-       <item>才C</item>
-       <item>才D</item>
+       <item>游戏</item>
+       <item>好声音</item>
    </string-array>
 </resources>

@@ -31,6 +31,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
-
+    compile(name: 'FlycoTabLayout_Lib-debug', ext: 'aar')
     testCompile 'junit:junit:4.12'
 }

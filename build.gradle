@@ -18,6 +18,9 @@ allprojects {
         maven {
             url 'https://jitpack.io'
         }
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -27,7 +30,6 @@ task clean(type: Delete) {
 
 // Define versions in a single place
 ext {
-
   // App dependencies
   butterKnifeVersion = '8.5.1'
 }

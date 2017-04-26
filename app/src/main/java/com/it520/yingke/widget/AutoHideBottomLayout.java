@@ -65,8 +65,19 @@ public class AutoHideBottomLayout extends RelativeLayout {
 
     int[] mBottomLocation = new int[2];
     boolean mShouldIntercept;//是否需要拦截
+    boolean mIsNeedAutoHide;//是否需要滚动时进行隐藏
+
+    public void setNeedAutoHide(boolean b){
+        mIsNeedAutoHide = b;
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        if(!mIsNeedAutoHide){
+            //如果不需要自动滚动，则直接返回
+            return super.dispatchTouchEvent(event);
+        }
+
         int eventAction = event.getAction();
         int scrollY = mBottom.getScrollY();
         int scrollX = mBottom.getScrollX();

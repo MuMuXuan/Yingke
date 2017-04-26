@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.it520.yingke.fragment.LiveFragment;
 import com.it520.yingke.fragment.MineFragment;
+import com.it520.yingke.widget.AutoHideBottomLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView mShow;
     @BindView(R.id.iv_mine)
     ImageView mIvMine;
+    @BindView(R.id.activity_main)
+    AutoHideBottomLayout activity_main;
     protected FragmentManager mFragmentManager;
     protected LiveFragment mLiveFragment;
 
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         //修改控件状态
         mIvMine.setSelected(false);
         mIvLive.setSelected(true);
+        activity_main.setNeedAutoHide(true);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         if(mLiveFragment==null){
             mLiveFragment = new LiveFragment();
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         //修改控件状态
         mIvMine.setSelected(true);
         mIvLive.setSelected(false);
+        activity_main.setNeedAutoHide(false);
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
         if(mMineFragment==null){
             mMineFragment = new MineFragment();
