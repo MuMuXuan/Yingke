@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.it520.yingke.R;
@@ -85,7 +86,45 @@ public class LiveFragment extends Fragment {
         LiveFragmentAdapter liveFragmentAdapter = new LiveFragmentAdapter(getChildFragmentManager(),fragments,mTitles);
         mViewPager.setAdapter(liveFragmentAdapter);
         mSlideTabLayout.setViewPager(mViewPager);
+        initListener();
+        //默认指向第2页，热门
+        mViewPager.setCurrentItem(1);
     }
+
+    private void initListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+                updateTabTextSize(position);
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void updateTabTextSize(int position) {
+        int tabCount = mSlideTabLayout.getTabCount();
+        TextView titleView;
+        for (int i = 0; i < tabCount; i++) {
+            titleView = mSlideTabLayout.getTitleView(i);
+            if(i==position){
+                titleView.setTextSize(18);
+                //字体加粗
+                titleView.getPaint().setFakeBoldText(true);
+            }else{
+                titleView.setTextSize(16);
+                titleView.getPaint().setFakeBoldText(false);
+            }
+        }
+    }
+
+
 
     @OnClick({R.id.iv_left, R.id.iv_right})
     public void onClick(View view) {

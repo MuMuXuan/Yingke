@@ -33,7 +33,7 @@
         tl:tl_textUnselectColor="@color/white20"
         tl:tl_textsize="16sp"
         tl:tl_tab_padding="10dp"
-        tl:tl_indicator_margin_bottom="3dp"
+        tl:tl_indicator_margin_bottom="2dp"
         />
 
     <ImageView
