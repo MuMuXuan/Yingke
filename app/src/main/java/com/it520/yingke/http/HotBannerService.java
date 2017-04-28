@@ -12,7 +12,15 @@ package com.it520.yingke.http;
  * ============================================================
  */
 
+import com.it520.yingke.bean.BannerData;
+import com.it520.yingke.util.Constant;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+
 public interface HotBannerService {
 
+    @GET(Constant.INDEX_BANNER)
+    Call<BannerData> getBannerDatas();
 
 }

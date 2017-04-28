@@ -18,7 +18,7 @@ public class Constant {
 
     public static final String BASE_URL_IP = "http://218.11.0.112/";
 
-    public static final String INDEX_BANNER = "api/live/ticker?mtxid=FCAA14EFE150&devi=864394102521707&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&conn=WIFI&imei=864394102521707&mtid=0acd9551fb5aa92442069df37393691c&aid=FCAA14EFE1500000&cv=IK3.4.20_Android&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&osversion=android_19&proto=4&logid=&vv=1.0.3-201610291749.android&icc=89860081012521701423&ua=LENOVOLenovoS898t%2B&lc=3000000000034000&imsi=460072521701423&cc=GF10000&r_c=1902445306&s_sg=5dab77bfef10a1b065b6f55d25e2b6df&s_sc=100&s_st=1478679310";
+    public static final String INDEX_BANNER = "api/live/ticker";
 
     public static final String INDEX_LIVE_TOP_DATE = "api/live/gettop?uid=260095067";
     public static final String INDEX_LIVE_ALL_DATE = "api/live/simpleall?uid=260095067";
@@ -42,4 +42,10 @@ public class Constant {
     public static final String GET_ROOM_VIEWERS = "http://218.11.0.112/api/live/users?lc=3000000000034000&cv=IK3.4.20_Android&cc=GF10000&ua=LENOVOLenovoS898t%2B&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&devi=864394102521707&imsi=460072521701423&imei=864394102521707&icc=89860081012521701423&conn=WIFI&vv=1.0.3-201610291749.android&aid=FCAA14EFE1500000&osversion=android_19&mtid=0acd9551fb5aa92442069df37393691c&mtxid=FCAA14EFE150&proto=4&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&logid=30&count=20&id=@_ID_@&start=0&r_c=126699580&s_sg=d068727adad34e22bef4f8dda827c8dd&s_sc=100&s_st=1482048916";
     public static final String GET_GOLDS = "http://218.11.0.112/api/statistic/inout?lc=3000000000034000&cv=IK3.4.20_Android&cc=GF10000&ua=LENOVOLenovoS898t%2B&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&devi=864394102521707&imsi=460072521701423&imei=864394102521707&icc=89860081012521701423&conn=WIFI&vv=1.0.3-201610291749.android&aid=FCAA14EFE1500000&osversion=android_19&mtid=0acd9551fb5aa92442069df37393691c&mtxid=FCAA14EFE150&proto=4&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&logid=127%2C133%2C166%2C45&id=@_ID_@&r_c=752990390&s_sg=1dc32125d83afca78ccf5b6d8cb43039&s_sc=100&s_st=1484732271";
     public static final String GET_PICTURE="http://img2.inke.cn/";
+
+    public static String getScaledImgUrl(String imgUrl,int width,int height){
+//        http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=http://img2.inke.cn/MTQ5MjU2MzgwNzQxNiMxMzcjanBn.jpg&w=100&h=100&s=80&c=0&o=0
+        String salceUrl = "http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=%1s&w=%2s&h=%3s&s=80";
+        return String.format(salceUrl,imgUrl,String.valueOf(width),String.valueOf(height));
+    }
 }

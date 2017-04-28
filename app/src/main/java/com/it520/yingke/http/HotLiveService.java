@@ -13,7 +13,7 @@ package com.it520.yingke.http;
  */
 
 
-import com.it520.yingke.bean.LiveDatas;
+import com.it520.yingke.bean.LiveListBean;
 import com.it520.yingke.util.Constant;
 
 import retrofit2.Call;
@@ -22,6 +22,6 @@ import retrofit2.http.GET;
 public interface HotLiveService {
 
     @GET(Constant.INDEX_LIVE_ALL_DATE)
-    Call<LiveDatas> getLiveDatas();
+    Call<LiveListBean> getLiveData();
 
 }

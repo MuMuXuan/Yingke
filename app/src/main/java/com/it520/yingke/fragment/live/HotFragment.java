@@ -15,28 +15,35 @@ package com.it520.yingke.fragment.live;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AndroidException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.it520.yingke.R;
-import com.it520.yingke.bean.LiveDatas;
+import com.it520.yingke.adapter.HotListAdapter;
+import com.it520.yingke.bean.BannerData;
+import com.it520.yingke.bean.LiveListBean;
+import com.it520.yingke.bean.TypeBean;
+import com.it520.yingke.http.HotBannerService;
 import com.it520.yingke.http.HotLiveService;
+import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HotFragment extends Fragment {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
+    protected HotListAdapter mHotListAdapter;
 
     @Nullable
     @Override
@@ -53,25 +60,48 @@ public class HotFragment extends Fragment {
     }
 
     private void initData() {
+        initAdapter();
+        initBannerData();
         initLiveData();
+    }
+
+    private void initAdapter() {
+        ArrayList<TypeBean> list = new ArrayList<>();
+        mHotListAdapter = new HotListAdapter(list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mHotListAdapter);
+    }
+
+    private void initBannerData() {
+        HotBannerService service = ServiceGenerator.getSingleton().createService(HotBannerService.class);
+        Call<BannerData> bannerDatas = service.getBannerDatas();
+        bannerDatas.enqueue(new RetrofitCallBackWrapper<BannerData>() {
+            @Override
+            public void onResponse(BannerData body) {
+                Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "body"+body);
+                Toast.makeText(getContext(), "获得轮播图成功", Toast.LENGTH_SHORT).show();
+                mHotListAdapter.setBannerData(body);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
     }
 
     private void initLiveData() {
         HotLiveService service = ServiceGenerator.getSingleton().createService(HotLiveService.class);
-        Call<LiveDatas> liveDatas = service.getLiveDatas();
-        liveDatas.enqueue(new Callback<LiveDatas>() {
+        Call<LiveListBean> liveData = service.getLiveData();
+        liveData.enqueue(new RetrofitCallBackWrapper<LiveListBean>() {
             @Override
-            public void onResponse(Call<LiveDatas> call, Response<LiveDatas> response) {
-                if(!response.isSuccessful()){
-                    onFailure(null,new AndroidException("请求失败"));
-                }
-                LiveDatas body = response.body();
-                Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "body "+body);
+            public void onResponse(LiveListBean body) {
+                mHotListAdapter.setLiveDataList(body);
             }
 
             @Override
-            public void onFailure(Call<LiveDatas> call, Throwable throwable) {
-                Log.e(getClass().getSimpleName() + "xmg", "onFailure: " + "请求失败"+throwable.getMessage());
+            public void onFailure(Throwable throwable) {
+
             }
         });
     }

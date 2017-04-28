@@ -20,6 +20,8 @@
     <color name="black80">#cc000000</color>
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="orange">#F4B25A</color>
+    <color name="tag_gray">#00D8C9</color>
 
 
 </resources>

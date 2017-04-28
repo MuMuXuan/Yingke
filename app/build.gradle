@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -33,4 +33,13 @@ dependencies {
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
     compile(name: 'FlycoTabLayout_Lib-debug', ext: 'aar')
     testCompile 'junit:junit:4.12'
+    compile project(':banner')
+
+    //Facebook图片加载
+    compile(name: 'fresco-0.14.1', ext: 'aar')
+    compile(name: 'drawee-0.14.1', ext: 'aar')
+    compile(name: 'fbcore-0.14.1', ext: 'aar')
+    compile(name: 'imagepipeline-0.14.1', ext: 'aar')
+    compile(name: 'imagepipeline-base-0.14.1', ext: 'aar')
+
 }

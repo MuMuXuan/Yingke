@@ -14,14 +14,14 @@ package com.it520.yingke.bean;
 
 import java.util.List;
 
-public class LiveDatas {
+public class LiveListBean {
 
     int expire_time;
     List<LiveBean> lives;
 
     @Override
     public String toString() {
-        return "LiveDatas{" +
+        return "LiveData{" +
                 "expire_time=" + expire_time +
                 ", lives=" + lives +
                 '}';

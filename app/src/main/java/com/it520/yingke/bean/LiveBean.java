@@ -12,7 +12,7 @@ package com.it520.yingke.bean;
  * ============================================================
  */
 
-public class LiveBean {
+public class LiveBean implements TypeBean{
 
     private String city;
     private int group;
@@ -29,6 +29,15 @@ public class LiveBean {
     private String stream_addr;
     private int version;
     private CreatorBean creator;
+    private ExtraBean extra;
+
+    public ExtraBean getExtra() {
+        return extra;
+    }
+
+    public void setExtra(ExtraBean extra) {
+        this.extra = extra;
+    }
 
     @Override
     public String toString() {
@@ -160,5 +169,10 @@ public class LiveBean {
 
     public void setCreator(CreatorBean creator) {
         this.creator = creator;
+    }
+
+    @Override
+    public int getType() {
+        return TYPE_HOT_LIVE;
     }
 }
