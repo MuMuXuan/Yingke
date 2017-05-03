@@ -26,7 +26,6 @@ dependencies {
     })
     // compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
     // annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-    compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -34,12 +33,11 @@ dependencies {
     compile(name: 'FlycoTabLayout_Lib-debug', ext: 'aar')
     testCompile 'junit:junit:4.12'
     compile project(':banner')
-
     //Facebook图片加载
     compile(name: 'fresco-0.14.1', ext: 'aar')
     compile(name: 'drawee-0.14.1', ext: 'aar')
     compile(name: 'fbcore-0.14.1', ext: 'aar')
     compile(name: 'imagepipeline-0.14.1', ext: 'aar')
     compile(name: 'imagepipeline-base-0.14.1', ext: 'aar')
-
+    compile 'com.android.support:design:24.2.1'
 }

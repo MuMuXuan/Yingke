@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.it520.yingke.R;
 import com.it520.yingke.adapter.HotListAdapter;
 import com.it520.yingke.bean.BannerData;
@@ -69,7 +70,33 @@ public class HotFragment extends Fragment {
         ArrayList<TypeBean> list = new ArrayList<>();
         mHotListAdapter = new HotListAdapter(list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         mRecyclerView.setAdapter(mHotListAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        //ImageLoader.pauseLoader();
+                        if (!Fresco.getImagePipeline().isPaused()) {
+                            Fresco.getImagePipeline().pause();
+                        }
+                        break;
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        //ImageLoader.resumeLoader();
+                        if (Fresco.getImagePipeline().isPaused()) {
+                            Fresco.getImagePipeline().resume();
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 
     private void initBannerData() {
@@ -97,6 +124,7 @@ public class HotFragment extends Fragment {
             @Override
             public void onResponse(LiveListBean body) {
                 mHotListAdapter.setLiveDataList(body);
+                Toast.makeText(getContext(), "请求成功，准备更新UI界面", Toast.LENGTH_SHORT).show();
             }
 
             @Override

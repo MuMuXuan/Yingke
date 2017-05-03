@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:background="@color/dark_gray">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/icon"
