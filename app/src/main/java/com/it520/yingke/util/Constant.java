@@ -44,8 +44,9 @@ public class Constant {
     public static final String GET_PICTURE="http://img2.inke.cn/";
 
     public static String getScaledImgUrl(String imgUrl,int width,int height){
-//        http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=http://img2.inke.cn/MTQ5MjU2MzgwNzQxNiMxMzcjanBn.jpg&w=100&h=100&s=80&c=0&o=0
-        String salceUrl = "http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=%1s&w=%2s&h=%3s&s=80";
-        return String.format(salceUrl,imgUrl,String.valueOf(width),String.valueOf(height));
+//        抓包数据示例
+// http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=http://img2.inke.cn/MTQ5MjU2MzgwNzQxNiMxMzcjanBn.jpg&w=100&h=100&s=80&c=0&o=0
+        String scaleUrl = "http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=%1s&w=%2s&h=%3s&s=80";
+        return String.format(scaleUrl,imgUrl,String.valueOf(width),String.valueOf(height));
     }
 }

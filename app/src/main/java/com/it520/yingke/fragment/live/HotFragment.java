@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.it520.yingke.R;
 import com.it520.yingke.adapter.HotListAdapter;
 import com.it520.yingke.bean.BannerData;
@@ -33,6 +32,7 @@ import com.it520.yingke.http.HotBannerService;
 import com.it520.yingke.http.HotLiveService;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
+import com.it520.yingke.util.imageLoader.ImageLoaderUtil;
 
 import java.util.ArrayList;
 
@@ -79,15 +79,11 @@ public class HotFragment extends Fragment {
                     case RecyclerView.SCROLL_STATE_DRAGGING:
                     case RecyclerView.SCROLL_STATE_SETTLING:
                         //ImageLoader.pauseLoader();
-                        if (!Fresco.getImagePipeline().isPaused()) {
-                            Fresco.getImagePipeline().pause();
-                        }
+                        ImageLoaderUtil.getSingleton().pause();
                         break;
                     case RecyclerView.SCROLL_STATE_IDLE:
                         //ImageLoader.resumeLoader();
-                        if (Fresco.getImagePipeline().isPaused()) {
-                            Fresco.getImagePipeline().resume();
-                        }
+                        ImageLoaderUtil.getSingleton().restart();
                         break;
                 }
             }

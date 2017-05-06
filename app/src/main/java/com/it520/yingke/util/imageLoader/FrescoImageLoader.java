@@ -14,7 +14,6 @@ public class FrescoImageLoader extends ImageLoader {
         //用fresco加载图片
         Uri uri = Uri.parse((String) path);
         imageView.setImageURI(uri);
-
     }
 
     //提供createImageView 方法，方便fresco自定义ImageView

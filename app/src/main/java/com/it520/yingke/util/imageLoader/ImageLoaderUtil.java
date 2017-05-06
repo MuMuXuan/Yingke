@@ -12,5 +12,31 @@ package com.it520.yingke.util.imageLoader;
  * ============================================================
  */
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 public class ImageLoaderUtil {
+    private static volatile ImageLoaderUtil sInstance;
+
+    public static ImageLoaderUtil getSingleton() {
+        if (sInstance == null) {
+            synchronized (ImageLoaderUtil.class) {
+                if (sInstance == null) {
+                    sInstance = new ImageLoaderUtil();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    public void pause(){
+        if (!Fresco.getImagePipeline().isPaused()) {
+            Fresco.getImagePipeline().pause();
+        }
+    }
+
+    public void restart(){
+        if (Fresco.getImagePipeline().isPaused()) {
+            Fresco.getImagePipeline().resume();
+        }
+    }
 }

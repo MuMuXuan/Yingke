@@ -1,7 +1,5 @@
 package com.it520.yingke.adapter;
 
-import android.graphics.Paint;
-import android.text.TextPaint;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -55,24 +53,18 @@ public class HotListViewHolder extends MyBaseHolder{
 
     public void setTags(int viewId,List<String> tags){
         LinearLayout ll_tag = getView(viewId);
+        //设置右侧间距
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
         layoutParams.setMargins(0,0, UIUtil.dip2px(10),0);
-
         for (int i = 0; i < tags.size(); i++) {
             String s = tags.get(i);
             TextView textView = new TextView(ll_tag.getContext());
             textView.setBackgroundResource(R.drawable.bg_tag);
             textView.setTextSize(10);
             textView.setTextColor(ll_tag.getResources().getColor(R.color.tag_gray));
-//            textView.setPadding(0,UIUtil.dip2px(5),0,UIUtil.dip2px(5));
             textView.setText(s);
             textView.setGravity(Gravity.CENTER);
-            TextPaint textViewPaint = textView.getPaint();
-            float textWidth = textViewPaint.measureText(s);
-            Paint.FontMetrics fontMetrics = textViewPaint.getFontMetrics();
-            layoutParams.width = (int) (textWidth+UIUtil.dip2px(24));
-            layoutParams.height = (int) ((fontMetrics.bottom-fontMetrics.top)+UIUtil.dip2px(5));
-
+            textView.setPadding(UIUtil.dip2px(10),UIUtil.dip2px(3),UIUtil.dip2px(10),UIUtil.dip2px(3));
             ll_tag.addView(textView,layoutParams);
         }
     }

@@ -12,9 +12,12 @@ package com.it520.yingke.adapter;
  * ============================================================
  */
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.it520.yingke.R;
 import com.it520.yingke.base.recyclerView.MyBaseAdapter;
-import com.it520.yingke.base.recyclerView.MyBaseHolder;
 import com.it520.yingke.bean.BannerBean;
 import com.it520.yingke.bean.BannerData;
 import com.it520.yingke.bean.ExtraBean;
@@ -22,44 +25,25 @@ import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.LiveListBean;
 import com.it520.yingke.bean.TypeBean;
 import com.it520.yingke.util.Constant;
-import com.it520.yingke.widget.banner.FrescoImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotListAdapter extends MyBaseAdapter<TypeBean>{
+public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
 
     private  ArrayList<String> mImages;
-    protected FrescoImageLoader mFrescoImageLoader;
 
     public HotListAdapter(ArrayList<TypeBean> data) {
         super(data);
     }
 
     @Override
-    public int getItemLayoutResId(int viewType) {
-        if(viewType==TypeBean.TYPE_HOT_BANNER){
-            return R.layout.view_banner;
-        }else if(viewType==TypeBean.TYPE_HOT_LIVE){
-            return R.layout.item_hot_live;
-        }
-        return 0;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return mList.get(position).getType();
-    }
-
-
-
-    @Override
-    protected void bindDataToHolder(MyBaseHolder holder, TypeBean itemData, int position) {
+        protected void bindDataToHolder(HotListViewHolder holder, TypeBean itemData, int position) {
         if(itemData.getType()==TypeBean.TYPE_HOT_BANNER){
-            //是轮播图  将轮播图数据弄成List<String>
-            holder.setBanner(R.id.banner, mImages,mFrescoImageLoader);
+            //type为轮播图  将轮播图数据弄成List<String>
+            holder.setBanner(R.id.banner, mImages);
         }else if(itemData.getType()==TypeBean.TYPE_HOT_LIVE){
-            //直播房间展示
+            //type为直播房间展示
             LiveBean liveBean = (LiveBean) itemData;
             //id  icon
             //id  from
@@ -82,15 +66,38 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean>{
         }
     }
 
+    @Override
+    public HotListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //根据viewType来返回不同布局资源文件id
+        int resId = -1;
+        if(viewType==TypeBean.TYPE_HOT_BANNER){
+            resId = R.layout.view_banner;
+        }else if(viewType==TypeBean.TYPE_HOT_LIVE){
+            resId = R.layout.item_hot_live;
+        }
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(resId, parent, false);
+        HotListViewHolder hotListViewHolder = new HotListViewHolder(inflate);
+        return hotListViewHolder;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        //判断当前位置的item
+        return mList.get(position).getType();
+    }
+
     public void setBannerData(BannerData bannerData){
         mList.add(0,bannerData);
         //将传进来的轮播图数据做处理，生成对应的图片地址集合
         List<BannerBean> ticker = bannerData.getTicker();
         mImages = new ArrayList<String>();
-        mFrescoImageLoader = new FrescoImageLoader();
         for (int i = 0; i < ticker.size(); i++) {
             BannerBean bannerBean = ticker.get(i);
-            mImages.add(bannerBean.getImage());
+            String imageUrl = bannerBean.getImage();
+            if(!imageUrl.contains("http")){
+                imageUrl = String.format("http://img2.inke.cn/%s",imageUrl);
+            }
+            mImages.add(imageUrl);
         }
         notifyDataSetChanged();
     }
