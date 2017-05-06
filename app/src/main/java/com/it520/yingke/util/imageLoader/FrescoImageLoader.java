@@ -1,4 +1,4 @@
-package com.it520.yingke.widget.banner;
+package com.it520.yingke.util.imageLoader;
 
 import android.content.Context;
 import android.net.Uri;
