@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="bottom" >
+
+        <RelativeLayout
+            android:id="@+id/listview_header_content"
+            android:layout_width="fill_parent"
+            android:layout_height="65dp"
+            android:gravity="center"
+            android:paddingTop="10dip"
+            >
+                <ImageView
+                    android:id="@+id/img_logo"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/fame"
+                    />
+
+        </RelativeLayout>
+
+</LinearLayout>

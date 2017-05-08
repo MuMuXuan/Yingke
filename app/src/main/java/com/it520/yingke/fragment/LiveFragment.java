@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.it520.yingke.R;
@@ -17,6 +18,7 @@ import com.it520.yingke.fragment.live.FoucsFragment;
 import com.it520.yingke.fragment.live.HotFragment;
 import com.it520.yingke.fragment.live.NearFragment;
 import com.it520.yingke.fragment.live.OtherFragment;
+import com.it520.yingke.util.UIUtil;
 
 import java.util.ArrayList;
 
@@ -47,11 +49,12 @@ public class LiveFragment extends Fragment {
     @BindView(R.id.viewPager)
     ViewPager mViewPager;
     protected String[] mTitles;
+    protected View mOldView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.frag_live, container, false);
+        View inflate =  inflater.inflate(R.layout.frag_live, container, false);
         ButterKnife.bind(this, inflate);
         mTitles = getResources().getStringArray(R.array.title);
         return inflate;
@@ -60,7 +63,20 @@ public class LiveFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initViewPager();
+        if(savedInstanceState==null){
+            //在内存不足时页面被干掉了，此时再次进入Fragment可能会重叠，这里做判断
+            initViewPager();
+        }else{
+            int index = savedInstanceState.getInt("index");
+            Toast.makeText(UIUtil.getContext(), "恢复现场"+index, Toast.LENGTH_SHORT).show();
+            mViewPager.setCurrentItem(index);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("index",mViewPager.getCurrentItem());
     }
 
     private void initViewPager() {

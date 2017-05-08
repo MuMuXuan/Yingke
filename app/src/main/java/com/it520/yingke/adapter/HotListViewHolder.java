@@ -49,6 +49,7 @@ public class HotListViewHolder extends MyBaseHolder{
     public void setFrescoImage(int viewId,String imgUri){
         SimpleDraweeView simpleDraweeView = getView(viewId);
         simpleDraweeView.setImageURI(imgUri);
+
     }
 
     public void setTags(int viewId,List<String> tags){

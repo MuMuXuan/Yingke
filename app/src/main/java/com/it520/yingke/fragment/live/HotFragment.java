@@ -32,7 +32,9 @@ import com.it520.yingke.http.HotBannerService;
 import com.it520.yingke.http.HotLiveService;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
+import com.it520.yingke.util.UIUtil;
 import com.it520.yingke.util.imageLoader.ImageLoaderUtil;
+import com.jcodecraeer.xrecyclerview.SRecyclerView;
 
 import java.util.ArrayList;
 
@@ -43,27 +45,35 @@ import retrofit2.Call;
 public class HotFragment extends Fragment {
 
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    SRecyclerView mRecyclerView;
     protected HotListAdapter mHotListAdapter;
+    protected View mInflate;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.frag_hot, container, false);
-        ButterKnife.bind(this, inflate);
-        return inflate;
+        if(mInflate==null){
+            mInflate = inflater.inflate(R.layout.frag_hot, container, false);
+            ButterKnife.bind(this, mInflate);
+        }
+        return mInflate;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
+        if(savedInstanceState==null){
+            initData();
+        }else{
+            Toast.makeText(UIUtil.getContext(), "回显", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void initData() {
         initAdapter();
-        initBannerData();
-        initLiveData();
+        requestBannerData();
+        requestLiveData();
     }
 
     private void initAdapter() {
@@ -93,16 +103,28 @@ public class HotFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
             }
         });
+        mRecyclerView.setLoadingListener(new SRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                requestLiveData();
+                requestBannerData();
+            }
+
+            @Override
+            public void onLoadMore() {
+
+            }
+        });
     }
 
-    private void initBannerData() {
+    private void requestBannerData() {
         HotBannerService service = ServiceGenerator.getSingleton().createService(HotBannerService.class);
         Call<BannerData> bannerDatas = service.getBannerDatas();
         bannerDatas.enqueue(new RetrofitCallBackWrapper<BannerData>() {
             @Override
             public void onResponse(BannerData body) {
                 Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "body"+body);
-                Toast.makeText(getContext(), "获得轮播图成功", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "获得轮播图成功", Toast.LENGTH_SHORT).show();
                 mHotListAdapter.setBannerData(body);
             }
 
@@ -113,14 +135,15 @@ public class HotFragment extends Fragment {
         });
     }
 
-    private void initLiveData() {
+    private void requestLiveData() {
         HotLiveService service = ServiceGenerator.getSingleton().createService(HotLiveService.class);
         Call<LiveListBean> liveData = service.getLiveData();
         liveData.enqueue(new RetrofitCallBackWrapper<LiveListBean>() {
             @Override
             public void onResponse(LiveListBean body) {
                 mHotListAdapter.setLiveDataList(body);
-                Toast.makeText(getContext(), "请求成功，准备更新UI界面", Toast.LENGTH_SHORT).show();
+                mRecyclerView.refreshComplete();
+//                Toast.makeText(getContext(), "请求成功，准备更新UI界面", Toast.LENGTH_SHORT).show();
             }
 
             @Override

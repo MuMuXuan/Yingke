@@ -22,10 +22,16 @@ import android.view.ViewGroup;
 import com.it520.yingke.R;
 
 public class NearFragment extends Fragment {
+
+    protected View mInflate;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.frag_foucs, container, false);
-        return inflate;
+        if(mInflate==null){
+            mInflate = inflater.inflate(R.layout.frag_foucs, container, false);
+        }
+        return mInflate;
     }
+
 }

@@ -87,6 +87,13 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
     }
 
     public void setBannerData(BannerData bannerData){
+        if(mList!=null&&mList.size()>0){
+            //已经有数据时，且第一条数据是轮播图，先将其移除
+            TypeBean typeBean = mList.get(0);
+            if(typeBean.getType()==TypeBean.TYPE_HOT_BANNER){
+                mList.remove(0);
+            }
+        }
         mList.add(0,bannerData);
         //将传进来的轮播图数据做处理，生成对应的图片地址集合
         List<BannerBean> ticker = bannerData.getTicker();
@@ -103,6 +110,16 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
     }
 
     public void setLiveDataList(LiveListBean liveDataList){
+        if(mList!=null&&mList.size()>0){
+            //已经有旧数据时，需要全部移除，但是需要保留轮播图数据，这里我们只更新直播房间的数据
+            TypeBean typeBean = mList.get(0);
+            if(typeBean.getType()==TypeBean.TYPE_HOT_BANNER){
+                mList.clear();
+                mList.add(typeBean);
+            }else{
+                mList.clear();
+            }
+        }
         List<LiveBean> lives = liveDataList.getLives();
         mList.addAll(lives);
         notifyDataSetChanged();

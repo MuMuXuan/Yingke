@@ -40,4 +40,5 @@ dependencies {
     compile(name: 'imagepipeline-0.14.1', ext: 'aar')
     compile(name: 'imagepipeline-base-0.14.1', ext: 'aar')
     compile 'com.android.support:design:24.2.1'
+    compile project(':xrecyclerview')
 }
