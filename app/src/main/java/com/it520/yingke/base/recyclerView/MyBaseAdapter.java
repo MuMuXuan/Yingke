@@ -26,6 +26,10 @@ public abstract class MyBaseAdapter<T,V extends MyBaseHolder> extends RecyclerVi
         mList = data;
     }
 
+    public ArrayList<T> getData() {
+        return mList;
+    }
+
     @Override
     public void onBindViewHolder(V holder, int position) {
         final int innerPosition = position;

@@ -12,6 +12,7 @@ package com.it520.yingke.fragment.live;
  * ============================================================
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.it520.yingke.R;
+import com.it520.yingke.activity.LiveShowActivity;
 import com.it520.yingke.adapter.HotListAdapter;
 import com.it520.yingke.bean.BannerData;
 import com.it520.yingke.bean.LiveListBean;
@@ -113,6 +115,22 @@ public class HotFragment extends Fragment {
             @Override
             public void onLoadMore() {
 
+            }
+        });
+        //设置条目点击
+        mHotListAdapter.setOnLiveItemClickListener(new HotListAdapter.OnLiveItemClickListener() {
+            @Override
+            public void onLiveItemClick(int position, View view) {
+                ArrayList<TypeBean> data = mHotListAdapter.getData();
+//                LiveBean liveBean = (LiveBean) data.get(position);
+                //去掉第一条的轮播图
+                ArrayList<TypeBean> liveBeanArrayList = new ArrayList<>(data);
+                liveBeanArrayList.remove(0);
+                Intent intent = new Intent(UIUtil.getContext(), LiveShowActivity.class);
+                intent.putExtra(LiveShowActivity.LIVE_SHOW_DATA,liveBeanArrayList);
+                //位置减去轮播图那一条
+                intent.putExtra(LiveShowActivity.LIVE_SHOW_INDEX,position-1);
+                startActivity(intent);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.it520.yingke.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /*
@@ -13,7 +14,7 @@ import java.util.List;
  * Version: 1.0
  * ============================================================
  */
-public class ExtraBean {
+public class ExtraBean implements Serializable{
 
     /**
      * cl : [0,216,201,1]
@@ -31,7 +32,7 @@ public class ExtraBean {
         this.label = label;
     }
 
-    public static class LabelBean {
+    public static class LabelBean implements Serializable{
         private String tab_key;
         private String tab_name;
         private List<Integer> cl;

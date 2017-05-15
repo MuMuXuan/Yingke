@@ -13,6 +13,7 @@ import com.it520.yingke.util.imageLoader.FrescoImageLoader;
 import com.it520.yingke.util.imageLoader.ImageLoaderFactory;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.util.List;
@@ -44,6 +45,11 @@ public class HotListViewHolder extends MyBaseHolder{
                 .setBannerStyle(BannerConfig.CIRCLE_INDICATOR)
                 .setImageLoader(imageLoader)
                 .start();
+    }
+
+    public void setBannerClick(int viewId, OnBannerListener listener){
+        Banner banner = getView(viewId);
+        banner.setOnBannerListener(listener);
     }
 
     public void setFrescoImage(int viewId,String imgUri){

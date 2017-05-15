@@ -12,7 +12,9 @@ package com.it520.yingke.bean;
  * ============================================================
  */
 
-public class CreatorBean {
+import java.io.Serializable;
+
+public class CreatorBean implements Serializable{
 
     private int id;
     private int level;

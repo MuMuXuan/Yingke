@@ -25,6 +25,7 @@ import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.LiveListBean;
 import com.it520.yingke.bean.TypeBean;
 import com.it520.yingke.util.Constant;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,11 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
     }
 
     @Override
-        protected void bindDataToHolder(HotListViewHolder holder, TypeBean itemData, int position) {
+        protected void bindDataToHolder(HotListViewHolder holder, TypeBean itemData, final int position) {
         if(itemData.getType()==TypeBean.TYPE_HOT_BANNER){
             //type为轮播图  将轮播图数据弄成List<String>
             holder.setBanner(R.id.banner, mImages);
+            holder.setBannerClick(R.id.banner,mBannerListener);
         }else if(itemData.getType()==TypeBean.TYPE_HOT_LIVE){
             //type为直播房间展示
             LiveBean liveBean = (LiveBean) itemData;
@@ -63,6 +65,12 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
             String scaledImgUrl = Constant.getScaledImgUrl(portraitImgUrl, 100, 100);
             holder.setFrescoImage(R.id.src, portraitImgUrl);
             holder.setFrescoImage(R.id.icon,scaledImgUrl);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnLiveItemClickListener.onLiveItemClick(position,v);
+                }
+            });
         }
     }
 
@@ -84,6 +92,22 @@ public class HotListAdapter extends MyBaseAdapter<TypeBean,HotListViewHolder>{
     public int getItemViewType(int position) {
         //判断当前位置的item
         return mList.get(position).getType();
+    }
+
+    private OnLiveItemClickListener mOnLiveItemClickListener;
+    private OnBannerListener mBannerListener;
+
+    public void setBannerListener(OnBannerListener onBannerListener){
+        mBannerListener = onBannerListener;
+    }
+
+
+    public void setOnLiveItemClickListener(OnLiveItemClickListener onLiveItemClickListener){
+        this.mOnLiveItemClickListener = onLiveItemClickListener;
+    }
+
+    public interface OnLiveItemClickListener{
+        void onLiveItemClick(int position,View view);
     }
 
     public void setBannerData(BannerData bannerData){

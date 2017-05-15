@@ -12,7 +12,9 @@ package com.it520.yingke.bean;
  * ============================================================
  */
 
-public class LiveBean implements TypeBean{
+import java.io.Serializable;
+
+public class LiveBean implements TypeBean,Serializable{
 
     private String city;
     private int group;
