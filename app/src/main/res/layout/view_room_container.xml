@@ -4,10 +4,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <com.it520.yingke.media.IjkVideoView
+    <!--<com.it520.yingke.media.IjkVideoView
         android:id="@+id/ijkPlayer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"/>-->
+    <com.pili.pldroid.player.widget.PLVideoTextureView
+        android:id="@+id/texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-
+    <!--聊天室，主播头像，观众头像，礼物按钮以及其他布局暂未写出-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fl_show_frag"/>
 </RelativeLayout>
