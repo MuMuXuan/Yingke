@@ -139,14 +139,21 @@ public class LiveShowActivity extends AppCompatActivity {
     private void loadVideoAndChatRoom(ViewGroup viewGroup) {
         if(!isInited){
             //初始化Fragment
+
             mShowFragment = new ShowFragment();
+            Bundle bundle = new Bundle();
+            //将数据传过去
+            bundle.putSerializable(LIVE_SHOW_DATA,mLiveBeanList);
+            bundle.putInt(LIVE_SHOW_INDEX,mCurrentIndex);
+            mShowFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_show_frag,mShowFragment,TAG_SHOWFRAGMENT).commit();
             mTexture_view.setOnCompletionListener(mOnCompletionListener);
             mTexture_view.setOnErrorListener(mOnErrorListener);
             isInited = true;
         }else{
             //调用Fragment的更新方法，把数据进行修改
-
+            mShowFragment.clearUI();
+            mShowFragment.setUI(mLiveBeanList.get(mCurrentIndex));
         }
         //如果正在播放在，先停掉
         if(mTexture_view.isPlaying()){

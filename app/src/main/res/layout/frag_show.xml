@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/rz_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -40,11 +41,13 @@
         android:paddingRight="7dp"
         android:paddingTop="3dp">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_anchor_icon"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:src="@drawable/login_logo_new"/>
+            app:roundAsCircle="true"
+            app:placeholderImage="@drawable/default_head"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -203,7 +206,7 @@
             android:textSize="12sp"/>
 
     <RelativeLayout
-        android:id="@+id/edid_outer"
+        android:id="@+id/edit_outer"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

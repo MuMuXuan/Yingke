@@ -47,7 +47,7 @@ dependencies {
 //    compile(name: 'ijkplayer-java-0.7.9', ext: 'aar')
 
     compile 'com.qiniu:happy-dns:0.2.+'
-    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
+//    compile 'com.qiniu.pili:pili-android-qos:0.8.+'
 
     compile(name: 'verticalviewpager-19.0.1', ext: 'aar')
 }

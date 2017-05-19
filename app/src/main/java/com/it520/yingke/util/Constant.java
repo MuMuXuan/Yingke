@@ -12,6 +12,8 @@ package com.it520.yingke.util;
  * ============================================================
  */
 
+import android.util.Log;
+
 public class Constant {
     /**websocket服务器地址*/
     public static final String WSURL = "ws://f.xmg520.cn:82/WebSocket/websocketServer";
@@ -41,7 +43,7 @@ public class Constant {
     public static final String SEARCH_REC_ICON_URL = "http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=http%3A%2F%2Fimg.meelive.cn%2F_@Src@_&w=30&h=30&s=80&c=0&o=0";
 
 
-    public static final String GET_ROOM_VIEWERS = "http://218.11.0.112/api/live/users?lc=3000000000034000&cv=IK3.4.20_Android&cc=GF10000&ua=LENOVOLenovoS898t%2B&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&devi=864394102521707&imsi=460072521701423&imei=864394102521707&icc=89860081012521701423&conn=WIFI&vv=1.0.3-201610291749.android&aid=FCAA14EFE1500000&osversion=android_19&mtid=0acd9551fb5aa92442069df37393691c&mtxid=FCAA14EFE150&proto=4&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&logid=30&count=20&id=@_ID_@&start=0&r_c=126699580&s_sg=d068727adad34e22bef4f8dda827c8dd&s_sc=100&s_st=1482048916";
+    public static final String GET_ROOM_VIEWERS = "api/live/users";
     public static final String GET_GOLDS = "http://218.11.0.112/api/statistic/inout?lc=3000000000034000&cv=IK3.4.20_Android&cc=GF10000&ua=LENOVOLenovoS898t%2B&uid=278794547&sid=20apIKRuUve4iOLo7oSi2i0Coi2ZKfLDhW6OzONeysOV8i2cQFaIWk&devi=864394102521707&imsi=460072521701423&imei=864394102521707&icc=89860081012521701423&conn=WIFI&vv=1.0.3-201610291749.android&aid=FCAA14EFE1500000&osversion=android_19&mtid=0acd9551fb5aa92442069df37393691c&mtxid=FCAA14EFE150&proto=4&smid=DuNRd%2FUxsbeK1L9tQw0TNRvGvuiTGcC08%2FFDr9KEdjdfkXbds8BheQpVHHOYmMkTErodalrJMOW1OTVu4Hamaemw&logid=127%2C133%2C166%2C45&id=@_ID_@&r_c=752990390&s_sg=1dc32125d83afca78ccf5b6d8cb43039&s_sc=100&s_st=1484732271";
     public static final String GET_PICTURE="http://img2.inke.cn/";
 
@@ -49,6 +51,30 @@ public class Constant {
 //        抓包数据示例
 // http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=http://img2.inke.cn/MTQ5MjU2MzgwNzQxNiMxMzcjanBn.jpg&w=100&h=100&s=80&c=0&o=0
         String scaleUrl = "http://image.scale.inke.com/imageproxy2/dimgm/scaleImage?url=%1s&w=%2s&h=%3s&s=80";
-        return String.format(scaleUrl,imgUrl,String.valueOf(width),String.valueOf(height));
+        imgUrl = getEscapeImgUrl(imgUrl);
+        Log.e("xmg", "getScaledImgUrl: " + ""+imgUrl);
+        String format = String.format(scaleUrl, imgUrl, String.valueOf(width), String.valueOf(height));
+        Log.e( "xmg", "getScaledImgUrl: " + ""+format);
+        return format;
     }
+
+    //对Url中的特殊符号做转义，规避加载图片时因为特殊符号不识别而失败
+//    /	    分隔目录和子目录	        %2F（忽略）
+//    ? 	分隔实际的URL和参数	        %3F（忽略）
+//    % 	指定特殊字符	            %25（忽略）
+//    +     URL中+号表示空格	        %2B
+//    # 	表示书签	                %23
+//    & 	URL中指定的参数间的分隔符	%26
+//    = 	URL中指定参数的值	        %3D
+    public static String getEscapeImgUrl(String imgUrl){
+        if(!imgUrl.contains("http:")){
+            imgUrl = " http://img2.inke.cn/"+imgUrl;
+        }
+        imgUrl = imgUrl.replaceAll("\\+","%2B")
+                .replaceAll("\\=","%3D")
+                .replaceAll("\\#","%23");
+        return imgUrl;
+    }
+
+
 }
