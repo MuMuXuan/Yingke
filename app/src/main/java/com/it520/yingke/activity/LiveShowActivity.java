@@ -20,8 +20,7 @@ import com.it520.yingke.bean.LiveStatusBean;
 import com.it520.yingke.fragment.show.ShowFragment;
 import com.it520.yingke.http.LiveStatusService;
 import com.it520.yingke.http.ServiceGenerator;
-import com.pili.pldroid.player.PLMediaPlayer;
-import com.pili.pldroid.player.widget.PLVideoTextureView;
+import com.it520.yingke.media.IjkVideoView;
 
 import java.util.ArrayList;
 
@@ -29,6 +28,7 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class LiveShowActivity extends AppCompatActivity {
 
@@ -39,11 +39,9 @@ public class LiveShowActivity extends AppCompatActivity {
     private VerticalViewPager mViewPager;
     protected ArrayList<LiveBean> mLiveBeanList;
     protected RelativeLayout mContainer;
-//    protected IjkVideoView mIjkVideoView;
+    protected IjkVideoView mIjkVideoView;
     protected ShowFragment mShowFragment;
-    protected PLVideoTextureView mTexture_view;
 
-    private int mDisplayAspectRatio = PLVideoTextureView.ASPECT_RATIO_PAVED_PARENT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,34 +59,22 @@ public class LiveShowActivity extends AppCompatActivity {
         mViewPager = (VerticalViewPager) findViewById(R.id.view_pager);
         //填充出直播视频的View
         mContainer = (RelativeLayout) LayoutInflater.from(LiveShowActivity.this).inflate(R.layout.view_room_container, null);
-//        mIjkVideoView = (IjkVideoView) mContainer.findViewById(R.id.ijkPlayer);
-        mTexture_view = (PLVideoTextureView) mContainer.findViewById(R.id.texture_view);
+        mIjkVideoView = (IjkVideoView) mContainer.findViewById(R.id.ijkPlayer);
 
-        mTexture_view.setDisplayAspectRatio(mDisplayAspectRatio);
         //初始化IjkPlayer播放器
-//        IjkMediaPlayer.loadLibrariesOnce(null);
-//        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
-
+        IjkMediaPlayer.loadLibrariesOnce(null);
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+        //设置IjkVideoView的渲染为TextureView避免默认黑屏背景
+        mIjkVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         //初始化数据Adapter
         initData();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mTexture_view.pause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mTexture_view.start();
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mTexture_view.stopPlayback();
+        mIjkVideoView.stopPlayback();
     }
 
     private void initData() {
@@ -147,8 +133,6 @@ public class LiveShowActivity extends AppCompatActivity {
             bundle.putInt(LIVE_SHOW_INDEX,mCurrentIndex);
             mShowFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.fl_show_frag,mShowFragment,TAG_SHOWFRAGMENT).commit();
-            mTexture_view.setOnCompletionListener(mOnCompletionListener);
-            mTexture_view.setOnErrorListener(mOnErrorListener);
             isInited = true;
         }else{
             //调用Fragment的更新方法，把数据进行修改
@@ -156,96 +140,16 @@ public class LiveShowActivity extends AppCompatActivity {
             mShowFragment.setUI(mLiveBeanList.get(mCurrentIndex));
         }
         //如果正在播放在，先停掉
-        if(mTexture_view.isPlaying()){
-            mTexture_view.stopPlayback();
+        if(mIjkVideoView.isPlaying()){
+            mIjkVideoView.stopPlayback();
         }
         String streamUrl = mLiveBeanList.get(mCurrentIndex).getStream_addr();
-        mTexture_view.setVideoURI(Uri.parse(streamUrl));
-        mTexture_view.start();
+        mIjkVideoView.setVideoURI(Uri.parse(streamUrl));
+        mIjkVideoView.start();
         viewGroup.addView(mContainer);
         //记录最近一次播放的地址，方便判断
         mLastRoomIndex = mCurrentIndex;
         checkLiveStatus();
-    }
-
-    private PLMediaPlayer.OnErrorListener mOnErrorListener = new PLMediaPlayer.OnErrorListener() {
-        @Override
-        public boolean onError(PLMediaPlayer mp, int errorCode) {
-            boolean isNeedReconnect = false;
-            switch (errorCode) {
-                case PLMediaPlayer.ERROR_CODE_INVALID_URI:
-                    showToastTips("Invalid URL !");
-                    break;
-                case PLMediaPlayer.ERROR_CODE_404_NOT_FOUND:
-                    showToastTips("404 resource not found !");
-                    break;
-                case PLMediaPlayer.ERROR_CODE_CONNECTION_REFUSED:
-                    showToastTips("Connection refused !");
-                    break;
-                case PLMediaPlayer.ERROR_CODE_CONNECTION_TIMEOUT:
-                    showToastTips("Connection timeout !");
-                    isNeedReconnect = true;
-                    break;
-                case PLMediaPlayer.ERROR_CODE_EMPTY_PLAYLIST:
-                    showToastTips("Empty playlist !");
-                    break;
-                case PLMediaPlayer.ERROR_CODE_STREAM_DISCONNECTED:
-                    showToastTips("Stream disconnected !");
-                    isNeedReconnect = true;
-                    break;
-                case PLMediaPlayer.ERROR_CODE_IO_ERROR:
-                    showToastTips("Network IO Error !");
-                    isNeedReconnect = true;
-                    break;
-                case PLMediaPlayer.ERROR_CODE_UNAUTHORIZED:
-                    showToastTips("Unauthorized Error !");
-                    break;
-                case PLMediaPlayer.ERROR_CODE_PREPARE_TIMEOUT:
-                    showToastTips("Prepare timeout !");
-                    isNeedReconnect = true;
-                    break;
-                case PLMediaPlayer.ERROR_CODE_READ_FRAME_TIMEOUT:
-                    showToastTips("Read frame timeout !");
-                    isNeedReconnect = true;
-                    break;
-                case PLMediaPlayer.MEDIA_ERROR_UNKNOWN:
-                    break;
-                default:
-                    showToastTips("unknown error !");
-                    break;
-            }
-            // Todo pls handle the error status here, reconnect or call finish()
-//            if (isNeedReconnect) {
-//                sendReconnectMessage();
-//            } else {
-                finish();
-//            }
-            // Return true means the error has been handled
-            // If return false, then `onCompletion` will be called
-            return true;
-        }
-    };
-    private PLMediaPlayer.OnCompletionListener mOnCompletionListener = new PLMediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(PLMediaPlayer plMediaPlayer) {
-            showToastTips("Play Completed !");
-            finish();
-        }
-    };
-
-    private Toast mToast;
-
-    private void showToastTips(final String tips) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mToast != null) {
-                    mToast.cancel();
-                }
-                mToast = Toast.makeText(getApplicationContext(), tips, Toast.LENGTH_SHORT);
-                mToast.show();
-            }
-        });
     }
 
     //检查主播的状态
