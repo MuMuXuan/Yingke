@@ -140,7 +140,7 @@ public class GiftShopFragment extends Fragment {
             currentPageGiftCount = remainder;
         }
         for (int i = 0; i < currentPageGiftCount; i++) {
-            giftBeanList.add(allGifts.get(currentIndex*currentPageGiftCount+i));
+            giftBeanList.add(allGifts.get(currentIndex*DEFAULT_GIFT_COUNT+i));
         }
         return giftBeanList;
     }
