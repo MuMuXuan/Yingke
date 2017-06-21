@@ -17,7 +17,7 @@ import com.it520.yingke.R;
 import com.it520.yingke.adapter.LiveShowPagerAdapter;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.LiveStatusBean;
-import com.it520.yingke.fragment.show.ShowFragment;
+import com.it520.yingke.fragment.room.RoomFragment;
 import com.it520.yingke.http.LiveStatusService;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.media.IjkVideoView;
@@ -34,13 +34,13 @@ public class LiveShowActivity extends AppCompatActivity {
 
     public static final String LIVE_SHOW_DATA = "live_show_data";
     public static final String LIVE_SHOW_INDEX = "live_show_index";
-    public static final String TAG_SHOWFRAGMENT = "ShowFragment";
+    public static final String TAG_ROOM_FRAGMENT = "RoomFragment";
     protected int mCurrentIndex;
     private VerticalViewPager mViewPager;
     protected ArrayList<LiveBean> mLiveBeanList;
     protected RelativeLayout mContainer;
     protected IjkVideoView mIjkVideoView;
-    protected ShowFragment mShowFragment;
+    protected RoomFragment mRoomFragment;
 
 
     @Override
@@ -126,18 +126,18 @@ public class LiveShowActivity extends AppCompatActivity {
         if(!isInited){
             //初始化Fragment
 
-            mShowFragment = new ShowFragment();
+            mRoomFragment = new RoomFragment();
             Bundle bundle = new Bundle();
             //将数据传过去
             bundle.putSerializable(LIVE_SHOW_DATA,mLiveBeanList);
             bundle.putInt(LIVE_SHOW_INDEX,mCurrentIndex);
-            mShowFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fl_show_frag,mShowFragment,TAG_SHOWFRAGMENT).commit();
+            mRoomFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl_show_frag, mRoomFragment, TAG_ROOM_FRAGMENT).commit();
             isInited = true;
         }else{
             //调用Fragment的更新方法，把数据进行修改
-            mShowFragment.clearUI();
-            mShowFragment.setUI(mLiveBeanList.get(mCurrentIndex));
+            mRoomFragment.clearUI();
+            mRoomFragment.setUI(mLiveBeanList.get(mCurrentIndex));
         }
         //如果正在播放在，先停掉
         if(mIjkVideoView.isPlaying()){
@@ -173,5 +173,17 @@ public class LiveShowActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mRoomFragment!=null){
+           boolean isFinished = mRoomFragment.backPressed();
+            if(!isFinished){
+                return;
+            }
+        }
+        super.onBackPressed();
+
     }
 }

@@ -1,4 +1,4 @@
-package com.it520.yingke.fragment.show;
+package com.it520.yingke.fragment.room;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,7 +51,7 @@ import retrofit2.Call;
  * ============================================================
  */
 
-public class ShowFragment extends Fragment {
+public class RoomFragment extends Fragment {
 
     protected ArrayList<LiveBean> mLiveBeanList;
     protected int mCurrentIndex = 0;
@@ -96,6 +96,8 @@ public class ShowFragment extends Fragment {
     @BindView(R.id.rz_content)
     RelativeLayout mRzContent;
     protected ViewerIconAdapter mViewerIconAdapter;
+    protected GiftShopFragment mGiftShopFragment;
+    public static final String TAG_GIFT_SHOP_FRAGMENT = "giftShopFragment";
 
     @Nullable
     @Override
@@ -128,7 +130,7 @@ public class ShowFragment extends Fragment {
     }
 
 
-    public void clearUI(){
+    public void clearUI() {
         mTvAnchorNumber.setText("");
         mIvAnchorIcon.setImageResource(R.drawable.default_head);
         mViewerIconAdapter.setViewerData(new ArrayList<ViewerBean>());
@@ -136,7 +138,7 @@ public class ShowFragment extends Fragment {
 
     public void setUI(LiveBean liveBean) {
         //设置映客直播号
-        mTvAnchorNumber.setText("映客号："+liveBean.getCreator().getId());
+        mTvAnchorNumber.setText("映客号：" + liveBean.getCreator().getId());
         //设置主播头像
         String scaledImgUrl = Constant.getScaledImgUrl(liveBean.getCreator().getPortrait(), 100, 100);
         mIvAnchorIcon.setImageURI(scaledImgUrl);
@@ -151,7 +153,7 @@ public class ShowFragment extends Fragment {
                     String string = body.string();
                     ViewerListBean viewerListBean = JsonUtil.parseJson(string, ViewerListBean.class);
                     mViewerIconAdapter.setViewerData(viewerListBean.getUsers());
-                    Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "size: "+viewerListBean.getUsers().size());
+                    Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "size: " + viewerListBean.getUsers().size());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -168,5 +170,29 @@ public class ShowFragment extends Fragment {
 
     @OnClick(R.id.iv_gift_shop)
     public void onClick() {
+        //点击时，展示礼物商店
+        //如果已经初始化，直接调用show，并播放内部动画
+        if (mGiftShopFragment == null) {
+            mGiftShopFragment = new GiftShopFragment();
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fl_gift_shop, mGiftShopFragment, TAG_GIFT_SHOP_FRAGMENT)
+                    .commit();
+        } else {
+            mGiftShopFragment.showContent();
+        }
+    }
+
+    /**
+     * 用于执行一些关闭view
+     * @return 返回为true，则关闭所在的Activity
+     */
+    public boolean backPressed() {
+        if(mGiftShopFragment!=null){
+            if(mGiftShopFragment.backPressed()){
+                return true;
+            }
+        }
+        //todo 执行一些自己的EditText展示判断
+        return false;
     }
 }
