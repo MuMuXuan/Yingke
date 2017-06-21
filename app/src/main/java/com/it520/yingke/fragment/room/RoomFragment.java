@@ -24,7 +24,7 @@ import com.it520.yingke.bean.ViewerBean;
 import com.it520.yingke.bean.ViewerListBean;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
-import com.it520.yingke.http.ViewerServices;
+import com.it520.yingke.http.service.ViewerServices;
 import com.it520.yingke.util.Constant;
 import com.it520.yingke.util.JsonUtil;
 import com.it520.yingke.util.UIUtil;
@@ -180,6 +180,8 @@ public class RoomFragment extends Fragment {
         } else {
             mGiftShopFragment.showContent();
         }
+        //隐藏下面的一排按钮
+        mRlBottom.setVisibility(View.GONE);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.it520.yingke.http;
+package com.it520.yingke.http.service;
 
 /* 
  * ============================================================
@@ -12,16 +12,15 @@ package com.it520.yingke.http;
  * ============================================================
  */
 
-
-import com.it520.yingke.bean.LiveListBean;
+import com.it520.yingke.bean.BannerData;
 import com.it520.yingke.util.Constant;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface HotLiveService {
+public interface HotBannerService {
 
-    @GET(Constant.INDEX_LIVE_ALL_DATE)
-    Call<LiveListBean> getLiveData();
+    @GET(Constant.INDEX_BANNER)
+    Call<BannerData> getBannerDatas();
 
 }

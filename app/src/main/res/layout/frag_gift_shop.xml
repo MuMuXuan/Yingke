@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/rl_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:background="@color/colorAccent"
-                android:visibility="gone">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/ll_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="gone">
+
+
+    <View
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
 
     <LinearLayout
         android:id="@+id/ll_bottom"
@@ -16,34 +23,23 @@
         android:orientation="vertical">
 
 
-        <android.support.v4.view.ViewPager
+        <com.it520.yingke.widget.WrapViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <LinearLayout
-            android:id="@+id/ll_dots"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            />
+            android:background="@color/black20"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            android:orientation="horizontal"
+            android:layout_height="48dp"
+            android:background="@color/black50"
             >
 
             <LinearLayout
                 android:id="@+id/ll_golds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
                 android:layout_weight="10"
                 android:clickable="true"
                 android:gravity="center_vertical"
@@ -58,7 +54,6 @@
                     android:layout_marginLeft="5dp"
                     android:text="充值"
                     android:textColor="@color/yellow"
-
                     />
 
                 <TextView
@@ -67,7 +62,6 @@
                     android:layout_marginLeft="5dp"
                     android:text="0"
                     android:textColor="@color/yellow"/>
-
 
                 <ImageView
                     android:layout_width="17dp"
@@ -82,29 +76,36 @@
                     android:src="@drawable/pay_arrow"/>
             </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_send_store"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="@drawable/bg_send"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:text="发送"
-                    />
+            <LinearLayout
+                android:id="@+id/ll_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="3dp"
+                />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_send_store"
+                android:layout_width="80dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/bg_send"
+                android:gravity="center"
+                android:paddingBottom="3dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="3dp"
+                android:text="发送"
+                android:textColor="@color/white"
+                />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
 
-    <View
-        android:id="@+id/back"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/ll_bottom"
-        />
-</RelativeLayout>
+</LinearLayout>

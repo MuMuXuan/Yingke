@@ -18,7 +18,7 @@ import com.it520.yingke.adapter.LiveShowPagerAdapter;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.LiveStatusBean;
 import com.it520.yingke.fragment.room.RoomFragment;
-import com.it520.yingke.http.LiveStatusService;
+import com.it520.yingke.http.service.LiveStatusService;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.media.IjkVideoView;
 
