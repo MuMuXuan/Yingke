@@ -39,6 +39,16 @@ public class GiftBean {
     private int second_currency;//第二类型货币的对应价格
     private int type;
 
+    private boolean isSelected;//是否被选中
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     public int getExp() {
         return exp;
     }

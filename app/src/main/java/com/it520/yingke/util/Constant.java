@@ -68,7 +68,7 @@ public class Constant {
 //    = 	URL中指定参数的值	        %3D
     public static String getEscapeImgUrl(String imgUrl){
         if(!imgUrl.contains("http:")){
-            imgUrl = " http://img2.inke.cn/"+imgUrl;
+            imgUrl = "http://img2.inke.cn/"+imgUrl;
         }
         imgUrl = imgUrl.replaceAll("\\+","%2B")
                 .replaceAll("\\=","%3D")

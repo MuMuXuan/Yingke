@@ -22,7 +22,6 @@ import com.it520.yingke.bean.GiftListBean;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.GiftShopService;
-import com.it520.yingke.util.DisplayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,16 +100,22 @@ public class GiftShopFragment extends Fragment {
     private void loadGiftsData(GiftListBean giftListBean) {
         //计算总页数，每页展示8个
         List<GiftBean> allGifts = giftListBean.getGifts();
-        int pageSize = allGifts.size() / DEFAULT_GIFT_COUNT;
+        //取余数
         int remainder = allGifts.size() % DEFAULT_GIFT_COUNT;//余数
-        pageSize = pageSize+(remainder==0?0:1);//如果有余数，就+1
+        if(remainder!=0){
+            //补全不够的那一页，放入一些空数据
+            for (int i = 0; i < DEFAULT_GIFT_COUNT-remainder; i++) {
+                allGifts.add(new GiftBean());
+            }
+        }
+        int pageSize = allGifts.size() / DEFAULT_GIFT_COUNT;
         ArrayList<GridView> gridViewList = new ArrayList<>();
         //准备各页的GridView用于展示
         for (int i = 0; i < pageSize; i++) {
             ArrayList<GiftBean> gifts = getCurrentPageGifts(allGifts,i);
             GridView gridView = new GridView(getContext());
             gridView.setNumColumns(4);
-            gridView.setHorizontalSpacing(DisplayUtil.dip2px(getContext(),2));
+//            gridView.setHorizontalSpacing(DisplayUtil.dip2px(getContext(),1));
             GiftGridViewAdapter giftGridViewAdapter = new GiftGridViewAdapter(gifts);
             gridView.setAdapter(giftGridViewAdapter);
             gridViewList.add(gridView);
@@ -130,16 +135,7 @@ public class GiftShopFragment extends Fragment {
      */
     private ArrayList<GiftBean> getCurrentPageGifts(List<GiftBean> allGifts, int currentIndex) {
         ArrayList<GiftBean> giftBeanList = new ArrayList<>();
-        int pageSize = allGifts.size() / DEFAULT_GIFT_COUNT;
-        int remainder = allGifts.size() % DEFAULT_GIFT_COUNT;//余数
-        pageSize = pageSize+(remainder==0?0:1);//如果有余数，就+1
-        int currentPageGiftCount = 0;
-        if(currentIndex!=pageSize-1||remainder==0){
-            currentPageGiftCount = DEFAULT_GIFT_COUNT;
-        }else{
-            currentPageGiftCount = remainder;
-        }
-        for (int i = 0; i < currentPageGiftCount; i++) {
+        for (int i = 0; i < DEFAULT_GIFT_COUNT; i++) {
             giftBeanList.add(allGifts.get(currentIndex*DEFAULT_GIFT_COUNT+i));
         }
         return giftBeanList;
