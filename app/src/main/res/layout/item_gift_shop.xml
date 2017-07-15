@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              android:background="@drawable/line"
+              android:background="@drawable/gridview_item_selector"
               android:gravity="center_horizontal"
               android:orientation="vertical">
+    <!--android:background="@drawable/line"-->
 
             <ImageView
                 android:id="@+id/iv_pop_lian"

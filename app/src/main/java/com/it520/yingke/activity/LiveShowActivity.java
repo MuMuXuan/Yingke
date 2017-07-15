@@ -75,6 +75,7 @@ public class LiveShowActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mIjkVideoView.stopPlayback();
+        mIjkVideoView.release(true);
     }
 
     private void initData() {
@@ -186,4 +187,5 @@ public class LiveShowActivity extends AppCompatActivity {
         super.onBackPressed();
 
     }
+
 }

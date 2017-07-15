@@ -19,9 +19,12 @@ import com.it520.yingke.R;
 import com.it520.yingke.adapter.GiftGridViewAdapter;
 import com.it520.yingke.bean.GiftBean;
 import com.it520.yingke.bean.GiftListBean;
+import com.it520.yingke.event.HideGiftShopEvent;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.GiftShopService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,8 +165,7 @@ public class GiftShopFragment extends Fragment {
 
     public void hideContent() {
         mLlContent.startAnimation(mAnimOut);
-        //// TODO: 2017/6/21 需要将下面的一排按钮进行展示
-
+        EventBus.getDefault().post(new HideGiftShopEvent(true));
     }
 
     public boolean backPressed() {

@@ -3,6 +3,7 @@ package com.it520.yingke.fragment.room;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,12 +24,17 @@ import com.it520.yingke.adapter.ViewerIconAdapter;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.ViewerBean;
 import com.it520.yingke.bean.ViewerListBean;
+import com.it520.yingke.event.HideGiftShopEvent;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.ViewerServices;
 import com.it520.yingke.util.Constant;
 import com.it520.yingke.util.JsonUtil;
 import com.it520.yingke.util.UIUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,14 +105,31 @@ public class RoomFragment extends Fragment {
     protected ViewerIconAdapter mViewerIconAdapter;
     protected GiftShopFragment mGiftShopFragment;
     public static final String TAG_GIFT_SHOP_FRAGMENT = "giftShopFragment";
+    @BindView(R.id.fl_gift_shop)
+    FrameLayout mFlGiftShop;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View inflate = inflater.inflate(R.layout.frag_show, container, false);
         ButterKnife.bind(this, inflate);
+        EventBus.getDefault().register(this);
         initUI();
         return inflate;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void showButton(HideGiftShopEvent event) {
+        if (event.isHideGiftShop) {
+            //展示下面那一排按钮
+            mRlBottom.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initUI() {
@@ -165,36 +189,46 @@ public class RoomFragment extends Fragment {
             }
         });
 
-
     }
 
-    @OnClick(R.id.iv_gift_shop)
-    public void onClick() {
-        //点击时，展示礼物商店
-        //如果已经初始化，直接调用show，并播放内部动画
-        if (mGiftShopFragment == null) {
-            mGiftShopFragment = new GiftShopFragment();
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.fl_gift_shop, mGiftShopFragment, TAG_GIFT_SHOP_FRAGMENT)
-                    .commit();
-        } else {
-            mGiftShopFragment.showContent();
+    @OnClick({R.id.iv_close, R.id.iv_gift_shop})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_close:
+                //关闭页面
+                FragmentActivity activity = getActivity();
+                if(activity!=null){
+                    activity.finish();
+                }
+                break;
+            case R.id.iv_gift_shop:
+                //点击时，展示礼物商店
+                //如果已经初始化，直接调用show，并播放内部动画
+                if (mGiftShopFragment == null) {
+                    mGiftShopFragment = new GiftShopFragment();
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.fl_gift_shop, mGiftShopFragment, TAG_GIFT_SHOP_FRAGMENT)
+                            .commit();
+                } else {
+                    mGiftShopFragment.showContent();
+                }
+                //隐藏下面的一排按钮
+                mRlBottom.setVisibility(View.GONE);
+                break;
         }
-        //隐藏下面的一排按钮
-        mRlBottom.setVisibility(View.GONE);
     }
 
     /**
      * 用于执行一些关闭view
+     *
      * @return 返回为true，则关闭所在的Activity
      */
     public boolean backPressed() {
-        if(mGiftShopFragment!=null){
-            if(mGiftShopFragment.backPressed()){
-                return true;
-            }
+        if (mGiftShopFragment != null) {
+            return mGiftShopFragment.backPressed();
         }
-        //todo 执行一些自己的EditText展示判断
-        return false;
+        //todo 执行一些自己的EditText展示判断  比如在展示EditText时，先返回false
+        return true;
     }
+
 }
