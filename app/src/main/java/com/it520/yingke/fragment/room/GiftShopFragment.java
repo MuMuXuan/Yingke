@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,9 +127,45 @@ public class GiftShopFragment extends Fragment {
         //将各个GridView发给ViewPager来展示
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(gridViewList);
         mViewPager.setAdapter(myPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setDot(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        //添加点
+        initDot(pageSize);
+        //让点默认选中第一个
+        setDot(0);
         //默认先选中第一页的第一个礼物，其实这里需要记录和回显的
         GiftGridViewAdapter giftGridViewAdapter = mGiftGridViewAdapters.get(0);
         giftGridViewAdapter.updateSelected(0);
+    }
+
+    private void initDot(int count) {
+        for (int i = 0; i < count; i++) {
+            ImageView dot = new ImageView(getActivity());
+            dot.setBackgroundResource(R.drawable.dot_selector);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            p.setMargins(15, 0, 0, 0);
+            mLlDots.addView(dot, p);
+        }
+    }
+
+    private void setDot(int index) {
+        for (int i = 0; i < mLlDots.getChildCount(); i++) {
+            ImageView image = (ImageView) mLlDots.getChildAt(i);
+            image.setSelected(i == index);
+        }
     }
 
     private ArrayList<GiftGridViewAdapter> mGiftGridViewAdapters;
@@ -209,7 +246,7 @@ public class GiftShopFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_store:
-                Toast.makeText(getContext(), "接下来开始送礼物："+mSelectedGiftBean.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "接下来开始送礼物：" + mSelectedGiftBean.getName(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.back:
                 hideContent();
