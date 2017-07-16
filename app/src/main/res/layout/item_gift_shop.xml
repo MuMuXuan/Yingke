@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              android:background="@drawable/gridview_item_selector"
+              android:background="@drawable/bg_gridview_item"
               android:gravity="center_horizontal"
+              android:id="@+id/ll_item"
               android:orientation="vertical">
     <!--android:background="@drawable/line"-->
 

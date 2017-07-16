@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.it520.yingke.R;
 import com.it520.yingke.adapter.GiftGridViewAdapter;
@@ -105,33 +107,59 @@ public class GiftShopFragment extends Fragment {
         List<GiftBean> allGifts = giftListBean.getGifts();
         //取余数
         int remainder = allGifts.size() % DEFAULT_GIFT_COUNT;//余数
-        if(remainder!=0){
+        if (remainder != 0) {
             //补全不够的那一页，放入一些空数据
-            for (int i = 0; i < DEFAULT_GIFT_COUNT-remainder; i++) {
+            for (int i = 0; i < DEFAULT_GIFT_COUNT - remainder; i++) {
                 allGifts.add(new GiftBean());
             }
         }
         int pageSize = allGifts.size() / DEFAULT_GIFT_COUNT;
         ArrayList<GridView> gridViewList = new ArrayList<>();
+        mGiftGridViewAdapters = new ArrayList<>();//用来保存各页礼物商店的数据适配器
         //准备各页的GridView用于展示
         for (int i = 0; i < pageSize; i++) {
-            ArrayList<GiftBean> gifts = getCurrentPageGifts(allGifts,i);
-            GridView gridView = new GridView(getContext());
-            gridView.setNumColumns(4);
-//            gridView.setHorizontalSpacing(DisplayUtil.dip2px(getContext(),1));
-            GiftGridViewAdapter giftGridViewAdapter = new GiftGridViewAdapter(gifts);
-            gridView.setAdapter(giftGridViewAdapter);
+            ArrayList<GiftBean> gifts = getCurrentPageGifts(allGifts, i);
+            GridView gridView = generateGridView(gifts);
+            gridView.setTag(i);//设置tag标记，方便找出对应的GridView和Adapter
             gridViewList.add(gridView);
         }
         //将各个GridView发给ViewPager来展示
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(gridViewList);
         mViewPager.setAdapter(myPagerAdapter);
+        //默认先选中第一页的第一个礼物，其实这里需要记录和回显的
+        GiftGridViewAdapter giftGridViewAdapter = mGiftGridViewAdapters.get(0);
+        giftGridViewAdapter.updateSelected(0);
     }
 
+    private ArrayList<GiftGridViewAdapter> mGiftGridViewAdapters;
+
+    private GridView generateGridView(ArrayList<GiftBean> gifts) {
+        GridView gridView = new GridView(getContext());
+        gridView.setNumColumns(4);
+        GiftGridViewAdapter giftGridViewAdapter = new GiftGridViewAdapter(gifts);
+        mGiftGridViewAdapters.add(giftGridViewAdapter);
+        gridView.setAdapter(giftGridViewAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //先取消
+                mGiftGridViewAdapters.get(mLastSelectedIndex).cancelAllSelected();
+                mLastSelectedIndex = (int) parent.getTag();
+                //选中
+                GiftGridViewAdapter adapter = (GiftGridViewAdapter) parent.getAdapter();
+                mSelectedGiftBean = adapter.updateSelected(position);
+            }
+        });
+        return gridView;
+    }
+
+    private int mLastSelectedIndex = 0;//记录最近一次的选中的GridView
+    private GiftBean mSelectedGiftBean;//被选中的那个礼物
     public static final int DEFAULT_GIFT_COUNT = 8;
 
     /**
      * 获得当前页的礼物对应的集合
+     *
      * @param allGifts
      * @param currentIndex
      * @return
@@ -139,7 +167,7 @@ public class GiftShopFragment extends Fragment {
     private ArrayList<GiftBean> getCurrentPageGifts(List<GiftBean> allGifts, int currentIndex) {
         ArrayList<GiftBean> giftBeanList = new ArrayList<>();
         for (int i = 0; i < DEFAULT_GIFT_COUNT; i++) {
-            giftBeanList.add(allGifts.get(currentIndex*DEFAULT_GIFT_COUNT+i));
+            giftBeanList.add(allGifts.get(currentIndex * DEFAULT_GIFT_COUNT + i));
         }
         return giftBeanList;
     }
@@ -152,14 +180,14 @@ public class GiftShopFragment extends Fragment {
 
     public void showContent() {
 //        Toast.makeText(getContext(), "TEST", Toast.LENGTH_SHORT).show();
-        if(isShowContent())
+        if (isShowContent())
             return;
         //不可见时，开始可见并播放动画
         mLlContent.setVisibility(View.VISIBLE);
         mLlContent.startAnimation(mAnimIn);
     }
 
-    private boolean isShowContent(){
+    private boolean isShowContent() {
         return mLlContent.getVisibility() == View.VISIBLE;
     }
 
@@ -169,7 +197,7 @@ public class GiftShopFragment extends Fragment {
     }
 
     public boolean backPressed() {
-        if(isShowContent()){
+        if (isShowContent()) {
             hideContent();
             return false;
         }
@@ -181,6 +209,7 @@ public class GiftShopFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_store:
+                Toast.makeText(getContext(), "接下来开始送礼物："+mSelectedGiftBean.getName(), Toast.LENGTH_SHORT).show();
                 break;
             case R.id.back:
                 hideContent();
@@ -206,7 +235,7 @@ public class GiftShopFragment extends Fragment {
         }
     }
 
-    private class MyPagerAdapter extends PagerAdapter{
+    private class MyPagerAdapter extends PagerAdapter {
 
 
         ArrayList<GridView> gridViewList;
