@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.it520.yingke.R;
@@ -18,9 +17,10 @@ import com.it520.yingke.adapter.LiveShowPagerAdapter;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.LiveStatusBean;
 import com.it520.yingke.fragment.room.RoomFragment;
-import com.it520.yingke.http.service.LiveStatusService;
 import com.it520.yingke.http.ServiceGenerator;
+import com.it520.yingke.http.service.LiveStatusService;
 import com.it520.yingke.media.IjkVideoView;
+import com.it520.yingke.widget.AdjustKeyboardLayout;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public class LiveShowActivity extends AppCompatActivity {
     protected int mCurrentIndex;
     private VerticalViewPager mViewPager;
     protected ArrayList<LiveBean> mLiveBeanList;
-    protected RelativeLayout mContainer;
+    protected AdjustKeyboardLayout mContainer;//改为ResizeLayout
     protected IjkVideoView mIjkVideoView;
     protected RoomFragment mRoomFragment;
 
@@ -56,10 +56,7 @@ public class LiveShowActivity extends AppCompatActivity {
             mLiveBeanList = (ArrayList<LiveBean>) intent.getSerializableExtra(LIVE_SHOW_DATA);
             mCurrentIndex = intent.getIntExtra(LIVE_SHOW_INDEX,0);
         }
-        mViewPager = (VerticalViewPager) findViewById(R.id.view_pager);
-        //填充出直播视频的View
-        mContainer = (RelativeLayout) LayoutInflater.from(LiveShowActivity.this).inflate(R.layout.view_room_container, null);
-        mIjkVideoView = (IjkVideoView) mContainer.findViewById(R.id.ijkPlayer);
+        initUI();
 
         //初始化IjkPlayer播放器
         IjkMediaPlayer.loadLibrariesOnce(null);
@@ -68,6 +65,28 @@ public class LiveShowActivity extends AppCompatActivity {
         mIjkVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         //初始化数据Adapter
         initData();
+    }
+
+    private void initUI() {
+        mViewPager = (VerticalViewPager) findViewById(R.id.view_pager);
+        //填充出直播视频的View
+        mContainer = (AdjustKeyboardLayout) LayoutInflater.from(LiveShowActivity.this).inflate(R.layout.view_room_container, null);
+        mIjkVideoView = (IjkVideoView) mContainer.findViewById(R.id.ijkPlayer);
+        mContainer.setOnResizeListener(new AdjustKeyboardLayout.OnShowKeyboardListener() {
+
+            @Override
+            public void onShowKeyboard(int keyboardSize) {
+                if(mRoomFragment!=null){
+                    mRoomFragment.adjustShowKeyboard(keyboardSize);
+                }
+            }
+
+            @Override
+            public void onHideKeyboard() {
+                mRoomFragment.hideEdit();
+            }
+
+        });
     }
 
 
@@ -185,7 +204,6 @@ public class LiveShowActivity extends AppCompatActivity {
             }
         }
         super.onBackPressed();
-
     }
 
 }

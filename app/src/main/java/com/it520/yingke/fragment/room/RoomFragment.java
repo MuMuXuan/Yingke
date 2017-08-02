@@ -30,6 +30,7 @@ import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.ViewerServices;
 import com.it520.yingke.util.Constant;
 import com.it520.yingke.util.JsonUtil;
+import com.it520.yingke.util.KeyboardUtil;
 import com.it520.yingke.util.UIUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -44,6 +45,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+
+import static com.it520.yingke.R.id.edt;
 
 
 /* 
@@ -96,12 +99,12 @@ public class RoomFragment extends Fragment {
     ImageView mIvMsgOff;
     @BindView(R.id.tv_send_msg)
     TextView mTvSendMsg;
-    @BindView(R.id.edt)
+    @BindView(edt)
     EditText mEdt;
-    @BindView(R.id.edit_outer)
-    RelativeLayout mEditOuter;
-    @BindView(R.id.rz_content)
-    RelativeLayout mRzContent;
+    @BindView(R.id.rl_edit)
+    RelativeLayout mRlEdit;
+    @BindView(R.id.rl_content)
+    RelativeLayout mRlContent;
     protected ViewerIconAdapter mViewerIconAdapter;
     protected GiftShopFragment mGiftShopFragment;
     public static final String TAG_GIFT_SHOP_FRAGMENT = "giftShopFragment";
@@ -140,6 +143,7 @@ public class RoomFragment extends Fragment {
         ArrayList<ViewerBean> viewerBeenList = new ArrayList<>();
         mViewerIconAdapter = new ViewerIconAdapter(viewerBeenList);
         mRecyclerViewViewer.setAdapter(mViewerIconAdapter);
+
     }
 
     @Override
@@ -152,7 +156,6 @@ public class RoomFragment extends Fragment {
         }
         setUI(mLiveBeanList.get(mCurrentIndex));
     }
-
 
     public void clearUI() {
         mTvAnchorNumber.setText("");
@@ -181,7 +184,6 @@ public class RoomFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -191,7 +193,7 @@ public class RoomFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.iv_close, R.id.iv_gift_shop})
+    @OnClick({R.id.iv_close, R.id.iv_gift_shop ,R.id.iv_send})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_close:
@@ -215,13 +217,47 @@ public class RoomFragment extends Fragment {
                 //隐藏下面的一排按钮
                 mRlBottom.setVisibility(View.GONE);
                 break;
+            case R.id.iv_send:
+                //点击了消息发送
+                showEditKeyboard();
+                break;
         }
+    }
+
+    private void showEditKeyboard() {
+        mRlBottom.setVisibility(View.GONE);
+        mRlEdit.setVisibility(View.VISIBLE);
+        mEdt.requestFocus();
+        //弹出
+        KeyboardUtil.showInputKeyboard(getActivity(),mEdt);
+    }
+
+    //让布局进行移动，以便适应键盘
+    public void adjustShowKeyboard(int keyboardSize){
+        //通过设置位移y将控件的Y轴进行移动
+        Log.e(getClass().getSimpleName() + "xmg", "adjustShowKeyboard: " + keyboardSize);
+        mRlEdit.setTranslationY(-keyboardSize);
+        //准备一个位移动画让上面那三个控件上去
+        mLlLeft.setTranslationY(-keyboardSize);
+        mRecyclerViewViewer.setTranslationY(-keyboardSize);
+        mCard.setTranslationY(-keyboardSize);
+    }
+
+    public void hideEdit() {
+        mRlEdit.setTranslationY(0);
+        //准备一个位移动画让上面那三个控件上去
+        mLlLeft.setTranslationY(0);
+        mRecyclerViewViewer.setTranslationY(0);
+        mCard.setTranslationY(0);
+
+        mRlBottom.setVisibility(View.VISIBLE);
+        mRlEdit.setVisibility(View.GONE);
     }
 
     /**
      * 用于执行一些关闭view
      *
-     * @return 返回为true，则关闭所在的Activity
+     * @return 返回为true，则关闭所在的Activity或执行一些super源码
      */
     public boolean backPressed() {
         if (mGiftShopFragment != null) {

@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/rz_content"
+                android:id="@+id/rl_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:focusable="true"
@@ -206,13 +206,13 @@
             android:textSize="12sp"/>
 
     <RelativeLayout
-        android:id="@+id/edit_outer"
+        android:id="@+id/rl_edit"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/white20"
+        android:background="@color/dark_gray"
         android:visibility="invisible"
         >
 
