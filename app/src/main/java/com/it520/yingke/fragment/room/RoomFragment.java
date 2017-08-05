@@ -24,6 +24,7 @@ import com.it520.yingke.adapter.ViewerIconAdapter;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.ViewerBean;
 import com.it520.yingke.bean.ViewerListBean;
+import com.it520.yingke.bean.socket.UserBean;
 import com.it520.yingke.event.HideGiftShopEvent;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
@@ -32,6 +33,8 @@ import com.it520.yingke.util.Constant;
 import com.it520.yingke.util.JsonUtil;
 import com.it520.yingke.util.KeyboardUtil;
 import com.it520.yingke.util.UIUtil;
+import com.it520.yingke.util.UserManager;
+import com.it520.yingke.util.WebSocketManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +46,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -110,6 +116,7 @@ public class RoomFragment extends Fragment {
     public static final String TAG_GIFT_SHOP_FRAGMENT = "giftShopFragment";
     @BindView(R.id.fl_gift_shop)
     FrameLayout mFlGiftShop;
+    protected String mRoomId;
 
     @Nullable
     @Override
@@ -153,8 +160,53 @@ public class RoomFragment extends Fragment {
         if (arguments != null) {
             mLiveBeanList = (ArrayList<LiveBean>) arguments.getSerializable(LiveShowActivity.LIVE_SHOW_DATA);
             mCurrentIndex = arguments.getInt(LiveShowActivity.LIVE_SHOW_INDEX);
+            mRoomId = mLiveBeanList.get(mCurrentIndex).getId();
         }
         setUI(mLiveBeanList.get(mCurrentIndex));
+        connectWebSocket();
+    }
+
+    private void connectWebSocket() {
+        WebSocketConnection connect = WebSocketManager.getSingleton().getConnect();
+        try {
+            connect.connect(Constant.WSURL,new WebSocketHandler(){
+                @Override
+                public void onOpen() {
+                    Log.e(getClass().getSimpleName() + "xmg", "onOpen: " + "WebSocket打开连接");
+                    autoLogin(mRoomId);
+                }
+
+                @Override
+                public void onClose(int code, String reason) {
+                    Log.e(getClass().getSimpleName() + "xmg", "onClose: " + "连接关闭");
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    Log.e(getClass().getSimpleName() + "xmg", "onTextMessage: " + "接收到消息: "+payload);
+                    //接收到消息以后，需要将其展示到页面上，
+                    // 判断类型，是礼物类型还是一般的聊天信息
+                    receivedMessage(payload);
+                }
+            });
+        } catch (WebSocketException e) {
+
+        }
+    }
+
+    //连接以后自动登录，登录后方便给当前用户分配用户ID，以便发送消息进行聊天
+    private void autoLogin(String roomId) {
+        UserBean currentUser = UserManager.getSingleton().getCurrentUser();
+        currentUser.setGroud(roomId);
+        String s = JsonUtil.toJson(currentUser);
+        //发消息
+        WebSocketManager.getSingleton().sendMessageToServer(s);
+    }
+
+    //接收到消息以后，需要将其展示到页面上，
+    // 判断类型，是礼物类型还是一般的聊天信息
+    private void receivedMessage(String payload) {
+
     }
 
     public void clearUI() {
@@ -171,7 +223,7 @@ public class RoomFragment extends Fragment {
         mIvAnchorIcon.setImageURI(scaledImgUrl);
         //设置围观观众
         ViewerServices service = ServiceGenerator.getSingleton().createService(ViewerServices.class);
-        Call<ResponseBody> responseBodyCall = service.getViewerData(liveBean.getId());
+        Call<ResponseBody> responseBodyCall = service.getViewerData(mRoomId);
         responseBodyCall.enqueue(new RetrofitCallBackWrapper<ResponseBody>() {
             @Override
             public void onResponse(ResponseBody body) {
@@ -193,7 +245,7 @@ public class RoomFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.iv_close, R.id.iv_gift_shop ,R.id.iv_send})
+    @OnClick({R.id.iv_close, R.id.iv_gift_shop ,R.id.iv_send,R.id.tv_send_msg})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_close:
@@ -221,8 +273,25 @@ public class RoomFragment extends Fragment {
                 //点击了消息发送
                 showEditKeyboard();
                 break;
+            case R.id.tv_send_msg:
+                //点击了输入框旁边的发送
+                String etString = mEdt.getText().toString();
+                mEdt.setText("");
+                sendMessage(etString);
+                break;
+
         }
     }
+
+    private void sendMessage(String s) {
+        UserBean currentUser = UserManager.getSingleton().getCurrentUser();
+        currentUser.setGroud(mRoomId);
+        currentUser.setMsg(s);
+        String json = JsonUtil.toJson(currentUser);
+        WebSocketManager.getSingleton().sendMessageToServer(json);
+    }
+
+
 
     private void showEditKeyboard() {
         mRlBottom.setVisibility(View.GONE);

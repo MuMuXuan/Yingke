@@ -24,4 +24,12 @@ public class JsonUtil {
         return bean;
     }
 
+    public static String toJson(Object obj){
+        if (sGson == null) {
+            sGson = new Gson();
+        }
+        String s = sGson.toJson(obj);
+        return s;
+    }
+
 }
