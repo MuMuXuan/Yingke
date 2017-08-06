@@ -16,13 +16,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.it520.yingke.R;
 import com.it520.yingke.adapter.GiftGridViewAdapter;
 import com.it520.yingke.bean.GiftBean;
 import com.it520.yingke.bean.GiftListBean;
 import com.it520.yingke.event.HideGiftShopEvent;
+import com.it520.yingke.event.SendGiftEvent;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.GiftShopService;
@@ -69,6 +69,7 @@ public class GiftShopFragment extends Fragment {
     LinearLayout mLlContent;
     protected Animation mAnimIn;
     protected Animation mAnimOut;
+
 
     @Nullable
     @Override
@@ -147,7 +148,8 @@ public class GiftShopFragment extends Fragment {
         setDot(0);
         //默认先选中第一页的第一个礼物，其实这里需要记录和回显的
         GiftGridViewAdapter giftGridViewAdapter = mGiftGridViewAdapters.get(0);
-        giftGridViewAdapter.updateSelected(0);
+        //默认选中的时候，记录下来这个gift信息
+        mSelectedGiftBean = giftGridViewAdapter.updateSelected(0);
     }
 
     private void initDot(int count) {
@@ -246,12 +248,18 @@ public class GiftShopFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_send_store:
-                Toast.makeText(getContext(), "接下来开始送礼物：" + mSelectedGiftBean.getName(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "接下来开始送礼物：" + mSelectedGiftBean.getName(), Toast.LENGTH_SHORT).show();
+                sendGift();
                 break;
             case R.id.back:
                 hideContent();
                 break;
         }
+    }
+
+    private void sendGift() {
+        SendGiftEvent sendGiftEvent = new SendGiftEvent(mSelectedGiftBean);
+        EventBus.getDefault().post(sendGiftEvent);
     }
 
     private class MyOutAnimListener implements Animation.AnimationListener {

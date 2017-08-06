@@ -12,37 +12,80 @@ package com.it520.yingke.util;
  * ============================================================
  */
 
+import android.util.Log;
+
 import de.tavendo.autobahn.WebSocketConnection;
+import de.tavendo.autobahn.WebSocketException;
+import de.tavendo.autobahn.WebSocketHandler;
 
 public class WebSocketManager {
-    private static WebSocketConnection sConnection;
+
+    private static boolean sIsInited = false;
+    private static WebSocketConnection sConnection = new WebSocketConnection();
 
     private WebSocketManager() {
-        sConnection = new WebSocketConnection();
     }
 
-    private static volatile WebSocketManager sInstance;
+    private static volatile WebSocketManager sInstance = new WebSocketManager();
 
-    public static WebSocketManager getSingleton() {
-        if (sInstance == null) {
-            synchronized (WebSocketManager.class) {
-                if (sInstance == null) {
-                    sInstance = new WebSocketManager();
-                }
-            }
-        }
+    public static WebSocketManager getInstance(){
         return sInstance;
     }
 
-    public WebSocketConnection getConnect(){
-        return sConnection;
+    public void init(){
+        if(sIsInited){
+            return;
+        }
+        sIsInited = true;
+        try {
+            sConnection.connect(Constant.WSURL,new WebSocketHandler(){
+                @Override
+                public void onOpen() {
+                    Log.e(getClass().getSimpleName() + "xmg", "onOpen: " + "WebSocket打开连接");
+                    if(mSocketHandler!=null){
+                        mSocketHandler.onOpen();
+                    }
+                }
+
+                @Override
+                public void onClose(int code, String reason) {
+                    Log.e(getClass().getSimpleName() + "xmg", "onClose: " + "连接关闭");
+                    if(mSocketHandler!=null){
+                        mSocketHandler.onClose(code,reason);
+                    }
+                }
+
+                @Override
+                public void onTextMessage(String payload) {
+                    Log.e(getClass().getSimpleName() + "xmg", "onTextMessage: " + "接收到消息: "+payload);
+                    if(mSocketHandler!=null){
+                        mSocketHandler.onTextMessage(payload);
+                    }
+                }
+            });
+        } catch (WebSocketException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private SocketHandler mSocketHandler;
+    public void setHandler(SocketHandler handler){
+        mSocketHandler = handler;
     }
 
     //发送消息
-    public void sendMessageToServer(String s) {
+    public static void sendMessageToServer(String s) {
+        if(!sIsInited){
+            return;
+        }
         if(sConnection!=null&&sConnection.isConnected()){
             sConnection.sendTextMessage(s);
         }
     }
 
+    public interface SocketHandler{
+         void onOpen();
+         void onClose(int code, String reason);
+         void onTextMessage(String payload);
+    }
 }

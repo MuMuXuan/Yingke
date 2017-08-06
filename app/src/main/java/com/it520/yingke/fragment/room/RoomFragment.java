@@ -21,11 +21,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.it520.yingke.R;
 import com.it520.yingke.activity.LiveShowActivity;
 import com.it520.yingke.adapter.ViewerIconAdapter;
+import com.it520.yingke.bean.GiftBean;
 import com.it520.yingke.bean.LiveBean;
 import com.it520.yingke.bean.ViewerBean;
 import com.it520.yingke.bean.ViewerListBean;
 import com.it520.yingke.bean.socket.UserBean;
 import com.it520.yingke.event.HideGiftShopEvent;
+import com.it520.yingke.event.SendGiftEvent;
 import com.it520.yingke.http.RetrofitCallBackWrapper;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.ViewerServices;
@@ -46,13 +48,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.tavendo.autobahn.WebSocketConnection;
-import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 import static com.it520.yingke.R.id.edt;
+import static com.it520.yingke.util.WebSocketManager.sendMessageToServer;
 
 
 /* 
@@ -142,6 +142,17 @@ public class RoomFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void sendGift(SendGiftEvent event) {
+        GiftBean giftBean = event.getGiftBean();
+        ArrayList<GiftBean> list = new ArrayList<>();
+        list.add(giftBean);
+        UserBean currentUser = UserManager.getSingleton().getCurrentUser();
+        currentUser.setGroud(mRoomId);
+        currentUser.setGifts(list);
+        WebSocketManager.sendMessageToServer(JsonUtil.toJson(currentUser));
+    }
+
     private void initUI() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UIUtil.getContext());
         mRecyclerViewChat.setLayoutManager(linearLayoutManager);
@@ -167,31 +178,26 @@ public class RoomFragment extends Fragment {
     }
 
     private void connectWebSocket() {
-        WebSocketConnection connect = WebSocketManager.getSingleton().getConnect();
-        try {
-            connect.connect(Constant.WSURL,new WebSocketHandler(){
-                @Override
-                public void onOpen() {
-                    Log.e(getClass().getSimpleName() + "xmg", "onOpen: " + "WebSocket打开连接");
-                    autoLogin(mRoomId);
-                }
+        WebSocketManager webSocketManager = WebSocketManager.getInstance();
+        webSocketManager.init();
+        webSocketManager.setHandler(new WebSocketManager.SocketHandler() {
+            @Override
+            public void onOpen() {
+                autoLogin(mRoomId);
+            }
 
-                @Override
-                public void onClose(int code, String reason) {
-                    Log.e(getClass().getSimpleName() + "xmg", "onClose: " + "连接关闭");
-                }
+            @Override
+            public void onClose(int code, String reason) {
+            }
 
-                @Override
-                public void onTextMessage(String payload) {
-                    Log.e(getClass().getSimpleName() + "xmg", "onTextMessage: " + "接收到消息: "+payload);
-                    //接收到消息以后，需要将其展示到页面上，
-                    // 判断类型，是礼物类型还是一般的聊天信息
-                    receivedMessage(payload);
-                }
-            });
-        } catch (WebSocketException e) {
+            @Override
+            public void onTextMessage(String payload) {
+                //接收到消息以后，需要将其展示到页面上，
+                // 判断类型，是礼物类型还是一般的聊天信息
+                receivedMessage(payload);
+            }
+        });
 
-        }
     }
 
     //连接以后自动登录，登录后方便给当前用户分配用户ID，以便发送消息进行聊天
@@ -200,7 +206,7 @@ public class RoomFragment extends Fragment {
         currentUser.setGroud(roomId);
         String s = JsonUtil.toJson(currentUser);
         //发消息
-        WebSocketManager.getSingleton().sendMessageToServer(s);
+        sendMessageToServer(s);
     }
 
     //接收到消息以后，需要将其展示到页面上，
@@ -288,7 +294,7 @@ public class RoomFragment extends Fragment {
         currentUser.setGroud(mRoomId);
         currentUser.setMsg(s);
         String json = JsonUtil.toJson(currentUser);
-        WebSocketManager.getSingleton().sendMessageToServer(json);
+        WebSocketManager.sendMessageToServer(json);
     }
 
 
