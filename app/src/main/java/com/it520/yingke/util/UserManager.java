@@ -12,21 +12,18 @@ package com.it520.yingke.util;
  * ============================================================
  */
 
-import com.it520.yingke.bean.socket.UserBean;
-
 import java.util.Random;
 
 public class UserManager {
-    private static UserBean sCurrentUser;
+
+    protected static String sUserName;
 
     private UserManager() {
-        sCurrentUser = new UserBean();
-        String userName = "U"+(int)(100000*new Random().nextDouble());
-        sCurrentUser.setUserName(userName);
+        sUserName = "U"+(int)(100000*new Random().nextDouble());
     }
 
-    public UserBean getCurrentUser() {
-        return sCurrentUser;
+    public String getCurrentUserId() {
+        return sUserName;
     }
 
     private static volatile UserManager sInstance;

@@ -7,24 +7,23 @@
                 android:focusableInTouchMode="true"
                 android:orientation="vertical">
 
-
-    <!--<com.it520.yingke.widght.MyRecyclerView
-        android:id="@+id/chat"
-        android:layout_width="250dp"
-        android:layout_height="150dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="55dp"
-        android:background="@android:color/transparent" />-->
-
+    <!--聊天消息列表-->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_Chat"
-        android:layout_width="250dp"
+        android:id="@+id/recyclerView_chat"
+        android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="8dp"
         android:layout_marginBottom="55dp"
         android:background="@android:color/transparent"
         />
+    <!--展示观众送的礼物的列表-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_gift"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_above="@id/recyclerView_chat"
+        android:background="@android:color/transparent" />
 
     <LinearLayout
         android:id="@+id/ll_left"

@@ -38,6 +38,10 @@ public class UserBean {
 
     private List<GiftBean> gifts;
 
+    public UserBean(String userName) {
+        this.userName = userName;
+    }
+
     public int getState() {
         return state;
     }
