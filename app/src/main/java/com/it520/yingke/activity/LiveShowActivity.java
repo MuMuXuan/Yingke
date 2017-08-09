@@ -1,7 +1,6 @@
 package com.it520.yingke.activity;
 
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -20,6 +19,7 @@ import com.it520.yingke.fragment.room.RoomFragment;
 import com.it520.yingke.http.ServiceGenerator;
 import com.it520.yingke.http.service.LiveStatusService;
 import com.it520.yingke.media.IjkVideoView;
+import com.it520.yingke.util.KeyboardUtil;
 import com.it520.yingke.widget.AdjustKeyboardLayout;
 
 import java.util.ArrayList;
@@ -46,8 +46,7 @@ public class LiveShowActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+//        getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
         setContentView(R.layout.activity_play);
 
@@ -72,20 +71,19 @@ public class LiveShowActivity extends AppCompatActivity {
         //填充出直播视频的View
         mContainer = (AdjustKeyboardLayout) LayoutInflater.from(LiveShowActivity.this).inflate(R.layout.view_room_container, null);
         mIjkVideoView = (IjkVideoView) mContainer.findViewById(R.id.ijkPlayer);
-        mContainer.setOnResizeListener(new AdjustKeyboardLayout.OnShowKeyboardListener() {
-
+        //设置软键盘的监听
+        KeyboardUtil.getInstance().setListener(this, new KeyboardUtil.OnSoftKeyBoardChangeListener() {
             @Override
-            public void onShowKeyboard(int keyboardSize) {
+            public void keyBoardShow(int height) {
                 if(mRoomFragment!=null){
-                    mRoomFragment.adjustShowKeyboard(keyboardSize);
+                    mRoomFragment.adjustShowKeyboard(height);
                 }
             }
 
             @Override
-            public void onHideKeyboard() {
+            public void keyBoardHide(int height) {
                 mRoomFragment.hideEdit();
             }
-
         });
     }
 

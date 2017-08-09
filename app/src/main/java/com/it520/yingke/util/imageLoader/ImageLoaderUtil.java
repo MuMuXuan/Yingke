@@ -12,7 +12,12 @@ package com.it520.yingke.util.imageLoader;
  * ============================================================
  */
 
+import android.view.View;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.concurrent.Executors;
 
@@ -42,4 +47,16 @@ public class ImageLoaderUtil {
             Fresco.getImagePipeline().resume();
         }
     }
+
+    public void displayImage(String url, View view){
+        if(view instanceof SimpleDraweeView){
+            //该控件是Fresco中图片控件
+            ((SimpleDraweeView) view).setImageURI(url);
+        }else if (view instanceof ImageView){
+            Glide.with(view.getContext().getApplicationContext())
+                    .load(url)
+                    .into((ImageView) view);
+        }
+    }
+
 }

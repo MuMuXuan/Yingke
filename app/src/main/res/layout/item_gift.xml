@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:paddingLeft="5dp">
+
+    <RelativeLayout
+        android:id="@+id/rlparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_radius_gift"
+        android:paddingRight="15dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_head"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/default_head"/>
+
+        <TextView
+            android:id="@+id/tv_user"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/iv_head"
+            android:text="JohnnyJohnnyJohnny"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_gift"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_user"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/iv_head"
+            android:text="送 一个小星星"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10sp"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/iv_giftIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_gift"
+            android:src="@mipmap/ic_launcher"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="5dp"
+        android:text="连送"
+        android:textColor="#E1CD74"
+        android:textStyle="bold|italic"/>
+
+    <TextView
+        android:id="@+id/giftNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:includeFontPadding="false"
+        android:text="x1"
+        android:textColor="#E1CD74"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        />
+
+</LinearLayout>

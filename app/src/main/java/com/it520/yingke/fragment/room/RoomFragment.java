@@ -38,6 +38,8 @@ import com.it520.yingke.util.KeyboardUtil;
 import com.it520.yingke.util.UIUtil;
 import com.it520.yingke.util.UserManager;
 import com.it520.yingke.util.WebSocketManager;
+import com.it520.yingke.widget.gift.GiftSentInfo;
+import com.it520.yingke.widget.gift.GiftView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -74,8 +76,10 @@ public class RoomFragment extends Fragment {
     protected int mCurrentIndex = 0;
     @BindView(R.id.recyclerView_chat)
     RecyclerView mRecyclerViewChat;
-    @BindView(R.id.recyclerView_gift)
-    RecyclerView mRecyclerViewGift;
+    //    @BindView(R.id.recyclerView_gift)
+//    RecyclerView mRecyclerViewGift;
+    @BindView(R.id.giftView)
+    GiftView mGiftView;
     @BindView(R.id.iv_anchor_icon)
     SimpleDraweeView mIvAnchorIcon;
     @BindView(R.id.tv_anchor_name)
@@ -125,7 +129,7 @@ public class RoomFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.frag_show, container, false);
+        View inflate = inflater.inflate(R.layout.frag_room, container, false);
         ButterKnife.bind(this, inflate);
         EventBus.getDefault().register(this);
         initUI();
@@ -162,8 +166,6 @@ public class RoomFragment extends Fragment {
     private void initUI() {
         LinearLayoutManager linearLayoutManagerChat = new LinearLayoutManager(UIUtil.getContext());
         mRecyclerViewChat.setLayoutManager(linearLayoutManagerChat);
-        LinearLayoutManager linearLayoutManagerGift = new LinearLayoutManager(UIUtil.getContext());
-        mRecyclerViewGift.setLayoutManager(linearLayoutManagerGift);
         LinearLayoutManager horLinearLayoutManager = new LinearLayoutManager(UIUtil.getContext(), LinearLayoutManager.HORIZONTAL, false);
         mRecyclerViewViewer.setLayoutManager(horLinearLayoutManager);
         ArrayList<ViewerBean> viewerBeenList = new ArrayList<>();
@@ -223,7 +225,7 @@ public class RoomFragment extends Fragment {
         UserBean userBean = JsonUtil.parseJson(payload, UserBean.class);
         //判断类型
         int type = userBean.getType();
-        if(type==UserBean.SEND_GIFT_TYPE){
+        if (type == UserBean.SEND_GIFT_TYPE) {
             //有人发送礼物，还要更新一下礼物列表
             updateGiftList(userBean);
         }
@@ -232,21 +234,28 @@ public class RoomFragment extends Fragment {
     }
 
     private void updateMsgList(UserBean userBean) {
-        if(mRoomMsgListAdapter==null){
+        if (mRoomMsgListAdapter == null) {
             ArrayList<UserBean> list = new ArrayList<>();
             list.add(userBean);
             mRoomMsgListAdapter = new RoomMsgListAdapter(list);
             mRecyclerViewChat.setAdapter(mRoomMsgListAdapter);
-        }else{
+        } else {
             //否则直接新增一个在列表后面
             mRoomMsgListAdapter.addItem(userBean);
             //让列表滚动到最后面的那个item来进行展示
-            mRecyclerViewChat.smoothScrollToPosition(mRoomMsgListAdapter.getItemCount()-1);
+            mRecyclerViewChat.smoothScrollToPosition(mRoomMsgListAdapter.getItemCount() - 1);
         }
     }
 
+    //更新礼物的显示
     private void updateGiftList(UserBean userBean) {
-
+        GiftBean gift = userBean.getGifts().get(0);
+        if(gift==null){
+            return;
+        }
+        GiftSentInfo giftSentInfo = new GiftSentInfo(userBean.getUserName(), gift.getName());
+        giftSentInfo.setGiftIcon(gift.getIcon());
+        mGiftView.sendGift(giftSentInfo);
     }
 
     public void clearUI() {
@@ -287,13 +296,13 @@ public class RoomFragment extends Fragment {
 
     }
 
-    @OnClick({R.id.iv_close, R.id.iv_gift_shop ,R.id.iv_send,R.id.tv_send_msg})
+    @OnClick({R.id.iv_close, R.id.iv_gift_shop, R.id.iv_send, R.id.tv_send_msg})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_close:
                 //关闭页面
                 FragmentActivity activity = getActivity();
-                if(activity!=null){
+                if (activity != null) {
                     activity.finish();
                 }
                 break;
@@ -311,7 +320,7 @@ public class RoomFragment extends Fragment {
                 //隐藏下面的一排按钮
                 mRlBottom.setVisibility(View.GONE);
                 //也需要隐藏聊天列表
-                mRecyclerViewChat.setVisibility(View.GONE);
+                mRecyclerViewChat.setVisibility(View.INVISIBLE);
                 break;
             case R.id.iv_send:
                 //点击了消息发送
@@ -336,17 +345,16 @@ public class RoomFragment extends Fragment {
     }
 
 
-
     private void showEditKeyboard() {
         mRlBottom.setVisibility(View.GONE);
         mRlEdit.setVisibility(View.VISIBLE);
         mEdt.requestFocus();
         //弹出
-        KeyboardUtil.showInputKeyboard(getActivity(),mEdt);
+        KeyboardUtil.showInputKeyboard(getActivity(), mEdt);
     }
 
     //让布局进行移动，以便适应键盘
-    public void adjustShowKeyboard(int keyboardSize){
+    public void adjustShowKeyboard(int keyboardSize) {
         //通过设置位移y将控件的Y轴进行移动
         Log.e(getClass().getSimpleName() + "xmg", "adjustShowKeyboard: " + keyboardSize);
         translateViews(-keyboardSize);
@@ -359,15 +367,16 @@ public class RoomFragment extends Fragment {
         mRlEdit.setVisibility(View.GONE);
     }
 
-    private void translateViews(float distance){
+    private void translateViews(float distance) {
         mRlEdit.setTranslationY(distance);
         mLlLeft.setTranslationY(distance);
         mRecyclerViewViewer.setTranslationY(distance);
         mCard.setTranslationY(distance);
 
         //新增：将聊天列表和礼物列表也位移上来
-        mRecyclerViewGift.setTranslationY(distance);
-        mRecyclerViewChat.setTranslationY(distance);
+            //礼物和聊天不需要移动，聊天就直接不用显示了
+        mGiftView.setTranslationY(distance);
+//        mRecyclerViewChat.setTranslationY(distance);
     }
 
     /**

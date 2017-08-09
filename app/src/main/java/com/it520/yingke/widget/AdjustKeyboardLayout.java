@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
  */
 
 public class AdjustKeyboardLayout extends RelativeLayout {
+
     public AdjustKeyboardLayout(Context context) {
         super(context);
     }
@@ -28,39 +29,7 @@ public class AdjustKeyboardLayout extends RelativeLayout {
     }
 
 
-    private boolean mIsShowKeyboard = false;
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        Log.e(getClass().getSimpleName() + "xmg", "onSizeChanged: " + "w "+w
-        +" h "+h+" oldw "+oldw+"  oldh "+oldh);
-        int reduceSize = oldh - h;
-        if(reduceSize>200){
-            //认为弹出了软键盘，导致了产生了较大的高度差
-            //将尺寸重新改为原来的大小
-            int widthMeasureSpec = MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY);
-            int heightMeasureSpec = MeasureSpec.makeMeasureSpec(oldh, MeasureSpec.EXACTLY);
-            measure(widthMeasureSpec,heightMeasureSpec);
-            layout(0,0,w,oldh);
-            if(mOnShowKeyboardListener!=null){
-                mOnShowKeyboardListener.onShowKeyboard(reduceSize);
-            }
-            mIsShowKeyboard = true;
-        }
-    }
-
-    private OnShowKeyboardListener mOnShowKeyboardListener;
-
-    public void setOnResizeListener(OnShowKeyboardListener listener){
-        mOnShowKeyboardListener = listener;
-    }
-
-
-    public interface  OnShowKeyboardListener{
-        void onShowKeyboard(int keyboardSize);
-        void onHideKeyboard();
-    }
+    private int mHeight = 0;//控件正常的高度
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -69,20 +38,24 @@ public class AdjustKeyboardLayout extends RelativeLayout {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        Log.e(getClass().getSimpleName() + "xmg", "onMeasure: " + " widthSize "+widthSize
-        +" heightSize "+heightSize);
-        if(mIsShowKeyboard){
-            mIsShowKeyboard = false;
-            if(mOnShowKeyboardListener!=null){
-                mOnShowKeyboardListener.onHideKeyboard();
-            }
-        }
+        Log.e(getClass().getSimpleName() + "xmg", "onMeasure: " + " widthSize " + widthSize
+                + " heightSize " + heightSize);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        Log.e(getClass().getSimpleName() + "xmg", "onLayout: " + " changed "+changed
-        +" l "+l+" t "+t+" r "+r+" b "+b);
+        Log.e(getClass().getSimpleName() + "xmg", "onLayout: " + " changed " + changed
+                + " l " + l + " t " + t + " r " + r + " b " + b);
+        if(mHeight==0){
+            mHeight = b;
+        }
+        if(mHeight>b){
+            int widthSpec = MeasureSpec.makeMeasureSpec(r, MeasureSpec.EXACTLY);
+            int heightSpec = MeasureSpec.makeMeasureSpec(mHeight, MeasureSpec.EXACTLY);
+            measure(widthSpec,heightSpec);
+            layout(0,0,r,mHeight);
+        }
     }
+
 }

@@ -1,0 +1,267 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+    <!--聊天消息列表-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_chat"
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="55dp"
+        android:background="@android:color/transparent"
+        />
+    <!--展示观众送的礼物的列表-->
+    <!--<android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_gift"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
+        android:layout_above="@id/recyclerView_chat"
+        android:background="@android:color/transparent" />-->
+    <com.it520.yingke.widget.gift.GiftView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/giftView"
+        android:layout_above="@id/recyclerView_chat"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/black_round_back"
+        android:gravity="center_vertical"
+        android:paddingBottom="3dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="7dp"
+        android:paddingTop="3dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/iv_anchor_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:roundAsCircle="true"
+            app:placeholderImage="@drawable/default_head"
+            />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_anchor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="直播"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/tv_online_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="18328"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"/>
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="13dp"
+            android:background="@drawable/bg_back"
+            android:paddingBottom="5dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="5dp"
+            android:text="关注"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_Viewer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/ll_left"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/ll_left"/>
+
+    <LinearLayout
+        android:id="@+id/card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_left"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/black_round_back"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:paddingTop="3dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="映票："
+            android:textColor="@android:color/white"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:id="@+id/tv_gold_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/payeco_plugin_rightarr"
+            android:text="31333662"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"/>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:id="@+id/iv_send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:clickable="true"
+            android:src="@drawable/room_down_publicchat_selector"/>
+
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            android:src="@drawable/room_down_close_selector"/>
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:layout_toLeftOf="@id/iv_close"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/room_down_share_selector"/>
+
+        <ImageView
+            android:id="@+id/iv_gift_shop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/iv_share"
+            android:clickable="true"
+            android:src="@drawable/room_down_gift_selector"
+
+            />
+
+        <ImageView
+            android:id="@+id/iv_message"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/iv_gift_shop"
+            android:clickable="true"
+            android:src="@drawable/room_down_privatechat_selector"
+
+            />
+    </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tv_anchor_number"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/ll_left"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="映客号：12344556"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_edit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/dark_gray"
+        android:visibility="invisible"
+        >
+
+        <ImageView
+            android:id="@+id/iv_msg_off"
+            android:layout_width="40dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/message_barrage_off"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_send_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="发送"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/tv_send_msg"
+            android:layout_toRightOf="@id/iv_msg_off"
+            android:background="@android:color/transparent"
+            android:hint="和大家说点什么吧"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:textColorHint="@android:color/darker_gray"
+            />
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fl_gift_shop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>
