@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.it520.yingke.widget.AdjustKeyboardLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                              android:id="@+id/room_container"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent">
+                android:id="@+id/room_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <com.it520.yingke.media.IjkVideoView
         android:id="@+id/ijkPlayer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
     <!--聊天室，主播头像，观众头像，礼物按钮以及其他布局暂未写出-->
     <FrameLayout
