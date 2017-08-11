@@ -1,5 +1,6 @@
 package com.it520.yingke;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.it520.yingke.activity.LivePublishActivity;
 import com.it520.yingke.fragment.LiveFragment;
 import com.it520.yingke.fragment.MineFragment;
 import com.it520.yingke.widget.AutoHideBottomLayout;
@@ -20,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.iv_live)
     ImageView mIvLive;
-    @BindView(R.id.show)
-    ImageView mShow;
+    @BindView(R.id.iv_live_publish)
+    ImageView mIvLivePublish;
     @BindView(R.id.iv_mine)
     ImageView mIvMine;
     @BindView(R.id.activity_main)
@@ -44,13 +46,14 @@ public class MainActivity extends AppCompatActivity {
         switchLive();
     }
 
-    @OnClick({R.id.iv_live, R.id.show, R.id.iv_mine})
+    @OnClick({R.id.iv_live, R.id.iv_live_publish, R.id.iv_mine,})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_live:
                 switchLive();
                 break;
-            case R.id.show:
+            case R.id.iv_live_publish:
+                startActivity(new Intent(getApplicationContext(), LivePublishActivity.class));
                 break;
             case R.id.iv_mine:
                 switchMine();
