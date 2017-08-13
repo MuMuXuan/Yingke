@@ -19,8 +19,6 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import java.util.concurrent.Executors;
-
 public class ImageLoaderUtil {
     private static volatile ImageLoaderUtil sInstance;
 
@@ -38,7 +36,6 @@ public class ImageLoaderUtil {
     public void pause(){
         if (!Fresco.getImagePipeline().isPaused()) {
             Fresco.getImagePipeline().pause();
-            Executors.newSingleThreadExecutor();
         }
     }
 

@@ -68,12 +68,14 @@ public class Constant {
 //    # 	表示书签	                %23
 //    & 	URL中指定的参数间的分隔符	%26
 //    = 	URL中指定参数的值	        %3D
+//    * 	URL中指定参数的值	        %2A
     public static String getEscapeImgUrl(String imgUrl){
         if(!imgUrl.contains("http:")){
             imgUrl = "http://img2.inke.cn/"+imgUrl;
         }
         imgUrl = imgUrl.replaceAll("\\+","%2B")
                 .replaceAll("\\=","%3D")
+                .replaceAll("\\=","%2A")
                 .replaceAll("\\#","%23");
         return imgUrl;
     }
