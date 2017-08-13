@@ -129,16 +129,26 @@ public class RoomFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.frag_room, container, false);
-        ButterKnife.bind(this, inflate);
-        EventBus.getDefault().register(this);
+        View view = inflater.inflate(R.layout.frag_room, container, false);
+        ButterKnife.bind(this, view);
+        mRecyclerViewViewer = ButterKnife.findById(view,R.id.recyclerView_Viewer);
+        mRecyclerViewChat = ButterKnife.findById(view,R.id.recyclerView_chat);
         initUI();
-        return inflate;
+        EventBus.getDefault().register(this);
+        return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.e(getClass().getSimpleName() + "xmg", "onDestroy: " + "");
+        clearUI();
+        mRoomMsgListAdapter = null;
+        mGiftShopFragment = null;
+        mLiveBeanList = null;
+        mViewerIconAdapter = null;
+        mRecyclerViewViewer = null;
+        mRecyclerViewChat = null;
         EventBus.getDefault().unregister(this);
     }
 
@@ -155,11 +165,11 @@ public class RoomFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void sendGift(SendGiftEvent event) {
         GiftBean giftBean = event.getGiftBean();
-        ArrayList<GiftBean> list = new ArrayList<>();
-        list.add(giftBean);
+//        ArrayList<GiftBean> list = new ArrayList<>();
+//        list.add(giftBean);
         UserBean currentUser = new UserBean(UserManager.getSingleton().getCurrentUserId());
-        currentUser.setGroud(mRoomId);
-        currentUser.setGifts(list);
+        currentUser.setGroup(mRoomId);
+        currentUser.setGift(giftBean);
         WebSocketManager.sendMessageToServer(JsonUtil.toJson(currentUser));
     }
 
@@ -184,12 +194,11 @@ public class RoomFragment extends Fragment {
             mRoomId = mLiveBeanList.get(mCurrentIndex).getId();
         }
         setUI(mLiveBeanList.get(mCurrentIndex));
-        connectWebSocket();
     }
 
     private void connectWebSocket() {
         WebSocketManager webSocketManager = WebSocketManager.getInstance();
-        webSocketManager.init();
+        //设置回调，一定要在初始化连接和登录之前来设置，不然会有BUG
         webSocketManager.setHandler(new WebSocketManager.SocketHandler() {
             @Override
             public void onOpen() {
@@ -208,12 +217,20 @@ public class RoomFragment extends Fragment {
             }
         });
 
+        if (WebSocketManager.isConnect()) {
+            //如果已经连接好了，直接登录
+            autoLogin(mRoomId);
+        }else{
+            webSocketManager.init();
+        }
+
     }
 
     //连接以后自动登录，登录后方便给当前用户分配用户ID，以便发送消息进行聊天
     private void autoLogin(String roomId) {
+
         UserBean currentUser = new UserBean(UserManager.getSingleton().getCurrentUserId());
-        currentUser.setGroud(roomId);
+        currentUser.setGroup(roomId);
         String s = JsonUtil.toJson(currentUser);
         //发消息
         sendMessageToServer(s);
@@ -222,7 +239,11 @@ public class RoomFragment extends Fragment {
     //接收到消息以后，需要将其展示到页面上，
     // 判断类型，是礼物类型还是一般的聊天信息
     private void receivedMessage(String payload) {
+        Log.e(getClass().getSimpleName() + "xmg", "receivedMessage: " + "");
         UserBean userBean = JsonUtil.parseJson(payload, UserBean.class);
+        if (userBean == null) {
+            return;
+        }
         //判断类型
         int type = userBean.getType();
         if (type == UserBean.SEND_GIFT_TYPE) {
@@ -238,6 +259,7 @@ public class RoomFragment extends Fragment {
             ArrayList<UserBean> list = new ArrayList<>();
             list.add(userBean);
             mRoomMsgListAdapter = new RoomMsgListAdapter(list);
+            Log.e(getClass().getSimpleName() + "xmg", "updateMsgList: " + mRecyclerViewChat);
             mRecyclerViewChat.setAdapter(mRoomMsgListAdapter);
         } else {
             //否则直接新增一个在列表后面
@@ -249,11 +271,12 @@ public class RoomFragment extends Fragment {
 
     //更新礼物的显示
     private void updateGiftList(UserBean userBean) {
-        GiftBean gift = userBean.getGifts().get(0);
-        if(gift==null){
+//        GiftBean gift = userBean.getGifts().get(0);
+        GiftBean gift = userBean.getGift();
+        if (gift == null) {
             return;
         }
-        GiftSentInfo giftSentInfo = new GiftSentInfo(userBean.getUserName(), gift.getName());
+        GiftSentInfo giftSentInfo = new GiftSentInfo(userBean.getUserId(), gift.getName());
         giftSentInfo.setGiftIcon(gift.getIcon());
         mGiftView.sendGift(giftSentInfo);
     }
@@ -263,10 +286,17 @@ public class RoomFragment extends Fragment {
         mIvAnchorIcon.setImageResource(R.drawable.default_head);
         mViewerIconAdapter.setViewerData(new ArrayList<ViewerBean>());
         //新增
-        mRoomMsgListAdapter.clearAll();
+        if (mRoomMsgListAdapter != null) {
+            mRoomMsgListAdapter.clearAll();
+        }
     }
 
     public void setUI(LiveBean liveBean) {
+        //每次都新设置一遍id
+        mRoomId = liveBean.getId();
+        //重新登录房间
+        connectWebSocket();
+
         //设置映客直播号
         mTvAnchorNumber.setText("映客号：" + liveBean.getCreator().getId());
         //设置主播头像
@@ -282,6 +312,10 @@ public class RoomFragment extends Fragment {
                 try {
                     String string = body.string();
                     ViewerListBean viewerListBean = JsonUtil.parseJson(string, ViewerListBean.class);
+                    if (viewerListBean == null || viewerListBean.getUsers() == null || viewerListBean.getUsers().size() == 0) {
+                        Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "该主播已经不再直播，或者该主播房间没观众");
+                        return;
+                    }
                     mViewerIconAdapter.setViewerData(viewerListBean.getUsers());
                     Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "size: " + viewerListBean.getUsers().size());
                 } catch (IOException e) {
@@ -338,7 +372,7 @@ public class RoomFragment extends Fragment {
 
     private void sendMessage(String s) {
         UserBean currentUser = new UserBean(UserManager.getSingleton().getCurrentUserId());
-        currentUser.setGroud(mRoomId);
+        currentUser.setGroup(mRoomId);
         currentUser.setMsg(s);
         String json = JsonUtil.toJson(currentUser);
         WebSocketManager.sendMessageToServer(json);
@@ -374,9 +408,8 @@ public class RoomFragment extends Fragment {
         mCard.setTranslationY(distance);
 
         //新增：将聊天列表和礼物列表也位移上来
-            //礼物和聊天不需要移动，聊天就直接不用显示了
+        //礼物和聊天不需要移动，聊天就直接不用显示了
         mGiftView.setTranslationY(distance);
-//        mRecyclerViewChat.setTranslationY(distance);
     }
 
     /**
@@ -388,7 +421,6 @@ public class RoomFragment extends Fragment {
         if (mGiftShopFragment != null) {
             return mGiftShopFragment.backPressed();
         }
-        //todo 执行一些自己的EditText展示判断  比如在展示EditText时，先返回false
         return true;
     }
 

@@ -19,11 +19,9 @@ import android.view.ViewGroup;
 import com.it520.yingke.R;
 import com.it520.yingke.base.recyclerView.MyBaseAdapter;
 import com.it520.yingke.base.recyclerView.MyBaseHolder;
-import com.it520.yingke.bean.GiftBean;
 import com.it520.yingke.bean.socket.UserBean;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RoomMsgListAdapter extends MyBaseAdapter<UserBean,MyBaseHolder> {
 
@@ -34,14 +32,15 @@ public class RoomMsgListAdapter extends MyBaseAdapter<UserBean,MyBaseHolder> {
     @Override
     protected void bindDataToHolder(MyBaseHolder holder, UserBean itemData, int position) {
         int type = itemData.getType();
-        String userName = itemData.getUserName();
-        List<GiftBean> gifts = itemData.getGifts();
+        String userName = itemData.getUserId();
+//        String userName = itemData.getUserName();
+//        List<GiftBean> gifts = itemData.getGifts();
         String msg = itemData.getMsg();
         String text = "";
         if(type==UserBean.LOGIN_TYPE){
             text = userName +":上线";
         }else if(type==UserBean.SEND_GIFT_TYPE){
-            text = userName+String.format(":我送了1个%s",gifts.get(0).getName());
+            text = userName+String.format(":我送了1个%s",itemData.getGift().getName());
         }else if(type==UserBean.SEND_MSG_TYPE){
             text = userName+String.format(":%s",msg);
         }

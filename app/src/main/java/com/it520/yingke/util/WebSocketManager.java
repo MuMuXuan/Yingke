@@ -21,7 +21,7 @@ import de.tavendo.autobahn.WebSocketHandler;
 public class WebSocketManager {
 
     private static boolean sIsInited = false;
-    private static WebSocketConnection sConnection = new WebSocketConnection();
+    private static WebSocketConnection sConnection;
 
     private WebSocketManager() {
     }
@@ -38,6 +38,7 @@ public class WebSocketManager {
         }
         sIsInited = true;
         try {
+            sConnection = new WebSocketConnection();
             sConnection.connect(Constant.WSURL,new WebSocketHandler(){
                 @Override
                 public void onOpen() {
@@ -65,6 +66,7 @@ public class WebSocketManager {
             });
         } catch (WebSocketException e) {
             e.printStackTrace();
+            Log.e(getClass().getSimpleName() + "xmg", "init: " +e.getMessage());
         }
     }
 
@@ -79,8 +81,16 @@ public class WebSocketManager {
             return;
         }
         if(sConnection!=null&&sConnection.isConnected()){
+            Log.e( "xmg", "sendMessageToServer: " + s);
             sConnection.sendTextMessage(s);
         }
+    }
+
+    public static boolean isConnect(){
+        if(sConnection!=null&&sConnection.isConnected()){
+            return true;
+        }
+        return false;
     }
 
     public interface SocketHandler{

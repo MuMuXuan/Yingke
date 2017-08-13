@@ -16,7 +16,8 @@ import android.util.Log;
 
 public class Constant {
     /**websocket服务器地址*/
-    public static final String WSURL = "ws://47.93.30.78:8080//WebSocket/websocketServer";
+//    public static final String WSURL = "ws://47.93.30.78:8080//WebSocket/websocketServer";
+    public static final String WSURL = "ws://192.168.191.1:8080/websocket";
 //    public static final String WSURL = "ws://f.xmg520.cn:82/WebSocket/websocketServer";
 
     public static final String BASE_URL_IP = "http://218.11.0.112/";

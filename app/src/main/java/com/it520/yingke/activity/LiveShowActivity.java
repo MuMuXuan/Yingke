@@ -141,6 +141,9 @@ public class LiveShowActivity extends AppCompatActivity {
     private boolean isInited = false;
 
     private void loadVideoAndChatRoom(ViewGroup viewGroup) {
+        //检查当前主播是否还在进行直播
+        checkLiveStatus();
+
         if(!isInited){
             //初始化Fragment
 
@@ -167,7 +170,7 @@ public class LiveShowActivity extends AppCompatActivity {
         viewGroup.addView(mContainer);
         //记录最近一次播放的地址，方便判断
         mLastRoomIndex = mCurrentIndex;
-        checkLiveStatus();
+
     }
 
     //检查主播的状态

@@ -14,8 +14,6 @@ package com.it520.yingke.bean.socket;
 
 import com.it520.yingke.bean.GiftBean;
 
-import java.util.List;
-
 public class UserBean {
 
     public static final int LOGIN_TYPE =1;//上线
@@ -26,9 +24,9 @@ public class UserBean {
 
     private int type;// 1.代表返回的是首次登录 2.代表是聊天信息 3.代表的是礼物
 
-    private String groud;// 哪一个直播间
+    private String group;// 哪一个直播间
 
-    private String userName;//自己用户
+    private String userId;//自己用户
 
     private String sendToUserName = "all"; //发送给目标用户 默认发给所有人
 
@@ -36,10 +34,34 @@ public class UserBean {
 
     private String msgType;//
 
-    private List<GiftBean> gifts;
+    private GiftBean gift;
 
-    public UserBean(String userName) {
-        this.userName = userName;
+    public UserBean(String userId) {
+        this.userId = userId;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public GiftBean getGift() {
+        return gift;
+    }
+
+    public void setGift(GiftBean gift) {
+        this.gift = gift;
     }
 
     public int getState() {
@@ -56,22 +78,6 @@ public class UserBean {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public String getGroud() {
-        return groud;
-    }
-
-    public void setGroud(String groud) {
-        this.groud = groud;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getSendToUserName() {
@@ -98,11 +104,4 @@ public class UserBean {
         this.msgType = msgType;
     }
 
-    public List<GiftBean> getGifts() {
-        return gifts;
-    }
-
-    public void setGifts(List<GiftBean> gifts) {
-        this.gifts = gifts;
-    }
 }

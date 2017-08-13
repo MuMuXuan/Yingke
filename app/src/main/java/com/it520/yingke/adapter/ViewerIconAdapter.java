@@ -53,6 +53,9 @@ public class ViewerIconAdapter extends MyBaseAdapter<ViewerBean,ViewerIconListHo
 
     public void setViewerData(ArrayList<ViewerBean> data){
         mList.clear();
+        if(data==null||data.size()==0){
+            return;
+        }
         mList.addAll(data);
         notifyDataSetChanged();
     }
