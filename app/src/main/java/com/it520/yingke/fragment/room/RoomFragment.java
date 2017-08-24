@@ -289,6 +289,9 @@ public class RoomFragment extends Fragment {
         if (mRoomMsgListAdapter != null) {
             mRoomMsgListAdapter.clearAll();
         }
+        if(mGiftView!=null){
+            mGiftView.cleanAll();
+        }
     }
 
     public void setUI(LiveBean liveBean) {

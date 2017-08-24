@@ -37,6 +37,7 @@ import com.it520.yingke.util.imageLoader.ImageLoaderUtil;
 
 import java.lang.ref.WeakReference;
 
+
 public class GiftView extends LinearLayout {
 
     protected FrameLayout mContent01;
@@ -202,6 +203,13 @@ public class GiftView extends LinearLayout {
     }
 
 
+    public void cleanAll(){
+        for (int i = 0; i < mContent01.getChildCount(); i++) {
+            View child = mContent01.getChildAt(i);
+            child.setTag(null);//清除tag
+            hideGiftView(i);
+        }
+    }
 
     //移除礼物view，根据位置index来移除，需要有动画
     public void hideGiftView(int index) {
@@ -215,8 +223,6 @@ public class GiftView extends LinearLayout {
     }
 
     public View updateGiftViewInfo(View view,GiftSentInfo info){
-
-
         //更新view的显示内容，还需要更新view的tag中info信息
         TextView tv_gift = (TextView) view.findViewById(R.id.tv_gift);
         TextView tv_user = (TextView) view.findViewById(R.id.tv_user);
@@ -233,7 +239,6 @@ public class GiftView extends LinearLayout {
         tv_gift.setText(builder);
         //通过工具类来加载图片
         ImageLoaderUtil.getSingleton().displayImage(info.getGiftIcon(),iv_giftIcon);
-
         //更新view的tag中info信息
         info.setTempTime(System.currentTimeMillis());
         view.setTag(info);
@@ -246,7 +251,6 @@ public class GiftView extends LinearLayout {
         if(giftView.getVisibility()!=VISIBLE){
             giftView.setVisibility(VISIBLE);
         }
-
         TextView tv_num = (TextView) giftView.findViewById(R.id.giftNum);
         String s = tv_num.getText().toString();
         int index = s.lastIndexOf("x");
@@ -284,10 +288,10 @@ public class GiftView extends LinearLayout {
                 long tempTime1 = 0;
                 long tempTime2 = 0;
                 long nowTime = System.currentTimeMillis();
-                if (child01 != null) {
+                if (child01 != null&&child01.getTag()!=null) {
                     tempTime1 = ((GiftSentInfo) child01.getTag()).getTempTime();
                 }
-                if (child02 != null) {
+                if (child02 != null&&child02.getTag()!=null) {
                     tempTime2 = ((GiftSentInfo) child02.getTag()).getTempTime();
                 }
                 if(child01!=null&&child01.getVisibility()==VISIBLE&&nowTime-tempTime1>HIDE_TIME){
@@ -301,24 +305,7 @@ public class GiftView extends LinearLayout {
                     return;
                 }
                 //只有第二个礼物超过最大显示时间
-                /*if (nowTime - tempTime1 < HIDE_TIME&&nowTime - tempTime2 > HIDE_TIME ) {
-                    giftView.hideGiftView(1);
-                } else if (nowTime - tempTime2 < HIDE_TIME&& nowTime - tempTime1 > HIDE_TIME) {
-                    //只有第一个礼物超过最大显示时间
-                    giftView.hideGiftView(0);
-                } else if (child01 != null && child02 != null) {
-                    //如果两个礼物view中，最少有一个超过了显示时间
-                    if(nowTime - tempTime2 > HIDE_TIME||nowTime - tempTime1 > HIDE_TIME){
-                        //两个view中起码有一个超过了最大显示时间
-                        if (tempTime1 - tempTime2 > 0) {
-                            //说明第一个展示的时间比第二个短，此时让第二个礼物被移除
-                            giftView.hideGiftView(1);
-                        } else {
-                            giftView.hideGiftView(0);
-                        }
-//                    }
-                }*/
-                //给自己继续发
+                //给自己继续发消息
                 sendEmptyMessageDelayed(0, LOOP_TIME);
             }
         }
