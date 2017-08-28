@@ -1,5 +1,6 @@
 package com.it520.yingke.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.flyco.tablayout.SlidingTabLayout;
 import com.it520.yingke.R;
+import com.it520.yingke.activity.SearchActivity;
 import com.it520.yingke.adapter.LiveFragmentAdapter;
 import com.it520.yingke.fragment.live.FoucsFragment;
 import com.it520.yingke.fragment.live.HotFragment;
@@ -146,6 +148,8 @@ public class LiveFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_left:
+                //开启搜索页面
+                startActivity(new Intent(getContext(), SearchActivity.class));
                 break;
             case R.id.iv_right:
                 break;
