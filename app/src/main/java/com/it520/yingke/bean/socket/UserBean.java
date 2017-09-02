@@ -20,19 +20,13 @@ public class UserBean {
     public static final int SEND_MSG_TYPE =2;//消息
     public static final int SEND_GIFT_TYPE =3;//礼物
 
-    private int state;//后端返回的状态100 表示成功
-
     private int type;// 1.代表返回的是首次登录 2.代表是聊天信息 3.代表的是礼物
 
     private String group;// 哪一个直播间
 
     private String userId;//自己用户
 
-    private String sendToUserName = "all"; //发送给目标用户 默认发给所有人
-
     private String msg;//
-
-    private String msgType;//
 
     private GiftBean gift;
 
@@ -64,14 +58,6 @@ public class UserBean {
         this.gift = gift;
     }
 
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
     public int getType() {
         return type;
     }
@@ -80,28 +66,12 @@ public class UserBean {
         this.type = type;
     }
 
-    public String getSendToUserName() {
-        return sendToUserName;
-    }
-
-    public void setSendToUserName(String sendToUserName) {
-        this.sendToUserName = sendToUserName;
-    }
-
     public String getMsg() {
         return msg;
     }
 
     public void setMsg(String msg) {
         this.msg = msg;
-    }
-
-    public String getMsgType() {
-        return msgType;
-    }
-
-    public void setMsgType(String msgType) {
-        this.msgType = msgType;
     }
 
 }

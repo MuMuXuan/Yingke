@@ -49,6 +49,9 @@ public class LiveShowActivity extends AppCompatActivity {
 //        getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
         setContentView(R.layout.activity_play);
+        //初始化IjkPlayer播放器
+        IjkMediaPlayer.loadLibrariesOnce(null);
+        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
 
         Intent intent = getIntent();
         if(intent!=null){
@@ -57,9 +60,6 @@ public class LiveShowActivity extends AppCompatActivity {
         }
         initUI();
 
-        //初始化IjkPlayer播放器
-        IjkMediaPlayer.loadLibrariesOnce(null);
-        IjkMediaPlayer.native_profileBegin("libijkplayer.so");
         //设置IjkVideoView的渲染为TextureView避免默认黑屏背景
         mIjkVideoView.setRender(IjkVideoView.RENDER_TEXTURE_VIEW);
         //初始化数据Adapter
@@ -181,6 +181,8 @@ public class LiveShowActivity extends AppCompatActivity {
         statusBeanCall.enqueue(new Callback<LiveStatusBean>() {
             @Override
             public void onResponse(Call<LiveStatusBean> call, Response<LiveStatusBean> response) {
+                Log.e(getClass().getSimpleName() + "xmg", "onResponse: liveStatus " + response.body());
+                Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + "liveStatus "+call.request().url().toString());
                 if(response.body().getAlive()!=1){
                     //主播没有在直播了，应该提示用户说该主播已经结束直播了，这里简单处理，直接弹出吐司
                     Log.e(getClass().getSimpleName() + "xmg", "onResponse: " + liveBean.getName()+" id: "+liveBean.getId());

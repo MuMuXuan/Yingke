@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -226,11 +227,32 @@ public class SRecyclerView extends RecyclerView {
         if(mWrapAdapter != null){
             if (layout instanceof GridLayoutManager) {
                 final GridLayoutManager gridManager = ((GridLayoutManager) layout);
+
+                final GridLayoutManager.SpanSizeLookup spanSizeLookup = gridManager.getSpanSizeLookup();
+
+
                 gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
+                        int defaultSpanSize = 1;
+
+                        if(spanSizeLookup!=null){
+                            //考虑头布局后的真正位置
+                            int realPos =  position-(mWrapAdapter.getHeadersCount()+1);
+                            //考虑数据越界
+                            if(!isNoMore&&realPos>=mWrapAdapter.getNativeItemCount()-1){
+                                Log.e(getClass().getSimpleName() + "xmg", "getSpanSize: " + "数据超界，不再计算");
+                            }else if(realPos<0){
+                                Log.e(getClass().getSimpleName() + "xmg", "getSpanSize: " + "数据超界，不再计算");
+                            }else{
+                                defaultSpanSize = spanSizeLookup.getSpanSize(realPos);
+                            }
+                            /*Log.e(getClass().getSimpleName() + "xmg", "getSpanSize: " + "defaultSpanSize "+defaultSpanSize+
+                                    "  getHeadersCount "+(mWrapAdapter.getHeadersCount()+1)
+                            +" javaBean "+mWrapAdapter.getItemViewType(position-(mWrapAdapter.getHeadersCount()+1)));*/
+                        }
                         return (mWrapAdapter.isHeader(position) || mWrapAdapter.isFooter(position) || mWrapAdapter.isRefreshHeader(position))
-                                ? gridManager.getSpanCount() : 1;
+                                ? gridManager.getSpanCount() : defaultSpanSize;
                     }
                 });
 
@@ -557,6 +579,13 @@ public class SRecyclerView extends RecyclerView {
         @Override
         public void registerAdapterDataObserver(AdapterDataObserver observer) {
             adapter.registerAdapterDataObserver(observer);
+        }
+
+        public int getNativeItemCount(){
+            if(adapter!=null){
+                return adapter.getItemCount();
+            }
+            return 0;
         }
 
         private class SimpleViewHolder extends ViewHolder {

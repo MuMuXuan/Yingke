@@ -46,6 +46,7 @@ public class Constant {
         Log.e("xmg", "getScaledImgUrl: " + ""+imgUrl);
         String format = String.format(scaleUrl, imgUrl, String.valueOf(width), String.valueOf(height));
         Log.e( "xmg", "getScaledImgUrl: " + ""+format);
+//        format = getEscapeImgUrl(format);
         return format;
     }
 

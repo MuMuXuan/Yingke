@@ -22,4 +22,7 @@ public interface TypeBean {
     public static int TYPE_SEARCH_RECOMMEND = 2;//今日推荐类型
     public static int TYPE_RECOMMEND_TITLE = 3;//今日推荐 标题
     public static int TYPE_SEARCH_ANCHOR_TYPES = 4;//好声音、游戏达人，用户分组类型
+
+    public static int TYPE_NEAR_HEAD = 0;
+    public static int TYPE_NEAR_ITEM = 1;
 }
