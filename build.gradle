@@ -20,6 +20,7 @@ allprojects {
         }
         flatDir {
             dirs 'libs'
+
         }
     }
 }

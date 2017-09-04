@@ -1,1 +1,1 @@
-include ':app', ':retrofitdemo', ':banner', ':bannerDemo', ':xrecyclerViewDemo', ':xrecyclerview', ':VerticalLiveDemo', ':websocketdemo'
+include ':app', ':retrofitdemo', ':banner', ':bannerDemo', ':xrecyclerViewDemo', ':xrecyclerview', ':verticalviewpagerdemo'
